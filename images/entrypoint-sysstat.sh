@@ -50,7 +50,7 @@ while [ 1 ]; do
     # Produce the report.
     REPORT_FROM=$(date +%H:%M:%S -d "${REPORT_LENGTH} seconds ago")
     REPORT_UNTIL=$(date +%H:%M:%S)
-    /usr/bin/sadf -s ${REPORT_FROM} -e ${REPORT_UNTIL} -j -- -A > /var/log/sa/dump.json
+    /usr/bin/sadf -s ${REPORT_FROM} -e ${REPORT_UNTIL} -j -- -A > /var/log/sa/sysstat-dump.json
 
     # Have we awoken in a new day? Rotation record, please!
     NEW_HOUR="$(date +%H)"

@@ -54,8 +54,8 @@ while [ 1  ]; do
     sleep ${PERIOD}
 
     # Report after waking up.
-    /usr/sbin/sa -ajlp > /var/account/dump-all
-    /usr/sbin/dump-acct /var/account/pacct > /var/account/dump-raw
+    /usr/sbin/sa -ajlp > /var/account/psacct-dump-all
+    /usr/sbin/dump-acct /var/account/pacct > /var/account/psacct-dump-raw
 
     # Could make a CSV out of the above "sa":
     #   | tr -s' ' | sed 's/^ //; s/ /,/g'

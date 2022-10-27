@@ -13,5 +13,15 @@ VOLUME /var/log/sa
 ARG STARTUP_SCRATCH
 ARG STARTUP_ROTATE
 
+LABEL description="Minimal sysstat collector sidecar image" \
+	io.k8s.description="Minimal sysstat collector sidecar image" \
+	io.k8s.display-name="sysstat collector" \
+	io.openshift.expose-services="" \
+	maintainer="Grega Bremec <gregab@p0f.net> \
+	vendor="P0F" \
+	version="v1.0" \
+	release="1.0" \
+	License=BSD
+
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 

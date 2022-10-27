@@ -13,5 +13,15 @@ VOLUME /var/account
 ARG STARTUP_SCRATCH
 ARG CUMULATIVE
 
+LABEL description="Minimal psacct collector sidecar image" \
+	io.k8s.description="Minimal psacct collector sidecar image" \
+	io.k8s.display-name="psacct collector" \
+	io.openshift.expose-services="" \
+	maintainer="Grega Bremec <gregab@p0f.net> \
+	vendor="P0F" \
+	version="v1.0" \
+	release="1.0" \
+	License=BSD
+
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
