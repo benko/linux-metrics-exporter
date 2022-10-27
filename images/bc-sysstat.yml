@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: List
+metadata: {}
+items:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: ubi-minimal
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: registry.redhat.io/ubi9/ubi-minimal:latest
+          importPolicy: {}
+          referencePolicy:
+            type: Source
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: collector-sysstat
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: collector-sysstat
+      labels:
+        build: collector-sysstat
+        build-config: collector-sysstat
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: collector-sysstat:latest
+      source:
+        git:
+          uri: https://git.p0f.net/gregab/linux-metrics-exporter.git
+          ref: main
+        contextDir: images
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Containerfile-sysstat
+          from:
+            kind: ImageStreamTag
+            name: ubi-minimal:latest
