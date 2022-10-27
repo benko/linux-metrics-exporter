@@ -1,0 +1,17 @@
+FROM registry.access.redhat.io/ubi9/ubi-minimal:latest
+
+USER 0
+
+COPY entrypoint-psacct.sh /usr/local/bin/entrypoint.sh
+
+RUN microdnf install psacct && \
+    rm -rf /var/lib/dnf /var/cache/dnf /var/cache/cups /var/cache/PackageKit && \
+    chmod 755 /usr/local/bin/entrypoint.sh
+
+VOLUME /var/account
+
+ARG STARTUP_SCRATCH
+ARG CUMULATIVE
+
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
