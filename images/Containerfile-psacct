@@ -1,12 +1,13 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi:latest
 
+#FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 #FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
 
 USER 0
 
 COPY entrypoint-psacct.sh /usr/local/bin/entrypoint.sh
 
-RUN microdnf install psacct && \
+RUN yum -y install psacct && \
     rm -rf /var/lib/dnf /var/cache/dnf /var/cache/cups /var/cache/PackageKit && \
     chmod 755 /usr/local/bin/entrypoint.sh
 
