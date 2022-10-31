@@ -31,7 +31,7 @@ The process is as follows.
 .Verify access to host entitlement data.
 [subs=+quotes]
 -------------------------------
-$ *ls -l /etc/pki/entitlement/*.pem /etc/rhsm/ca/*.pem*
+$ **ls -l /etc/pki/entitlement/*.pem /etc/rhsm/ca/*.pem**
 -rw-r--r--. 1 root root   3272 Oct 31 06:09 /etc/pki/entitlement/_6028779042203586857_-key.pem
 -rw-r--r--. 1 root root 149007 Oct 31 06:09 /etc/pki/entitlement/_6028779042203586857_.pem
 -rw-r--r--. 1 root root   2305 Sep  2  2021 /etc/rhsm/ca/redhat-entitlement-authority.pem
