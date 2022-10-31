@@ -4,7 +4,8 @@ USER 0
 
 COPY entrypoint-sysstat.sh /usr/local/bin/entrypoint.sh
 
-RUN microdnf -y install sysstat && \
+RUN cp ./etc-pki-entitlement/* /etc/pki/entitlement/ && \
+    microdnf -y install sysstat && \
     rm -rf /var/lib/dnf /var/cache/dnf /var/cache/cups /var/cache/PackageKit && \
     chmod 755 /usr/local/bin/entrypoint.sh
 
