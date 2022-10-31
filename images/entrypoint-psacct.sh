@@ -12,6 +12,12 @@ if [ -z "$(capsh --decode=$(cat /proc/self/status | grep ^CapEff | cut -f2) | gr
     exit 1
 fi
 
+# Die if running as PID 1 (no access to host PID namespace)
+if [ $$ -eq 1 ]; then
+    echo "FATAL: Need access to host PID namespace, can't seriously be PID 1."
+    exit 1
+fi
+
 # Shutdown handler.
 trap_shutdown() {
     echo "Shutting down..."
