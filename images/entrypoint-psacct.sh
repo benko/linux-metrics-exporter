@@ -12,6 +12,13 @@ if [ -z "$(capsh --decode=$(cat /proc/self/status | grep ^CapEff | cut -f2) | gr
     exit 1
 fi
 
+# Shutdown handler.
+trap_shutdown() {
+    echo "Shutting down..."
+    exit 0
+}
+trap trap_shutdown SIGHUP SIGINT SIGQUIT SIGABRT SIGTERM
+
 # Announce collection period.
 PERIOD=10
 if [ -n "$1" ]; then
