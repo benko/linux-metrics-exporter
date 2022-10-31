@@ -4,7 +4,10 @@ USER 0
 
 COPY entrypoint-sysstat.sh /usr/local/bin/entrypoint.sh
 
-RUN microdnf -y install sysstat && \
+# This still applies: delete host RHSM data in OpenShift
+# Twist: if there is no host entitlement, remove host RHSM data.
+RUN [ -d /etc/pki/entitlement-host ] || rm -f /etc/rhsm-host ; \
+    microdnf -y install sysstat && \
     rm -rf /var/lib/dnf /var/cache/dnf /var/cache/cups /var/cache/PackageKit && \
     chmod 755 /usr/local/bin/entrypoint.sh
 
