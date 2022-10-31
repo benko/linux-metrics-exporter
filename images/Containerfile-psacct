@@ -8,7 +8,7 @@ COPY entrypoint-psacct.sh /usr/local/bin/entrypoint.sh
 # Twist: if there is no host entitlement, remove host RHSM data.
 RUN [ -d /etc/pki/entitlement-host ] || rm -f /etc/rhsm-host ; \
     microdnf -y install psacct && \
-    rm -rf /var/lib/dnf /var/cache/dnf /var/cache/cups /var/cache/PackageKit && \
+    rm -rf /var/lib/dnf /var/cache/dnf /var/cache/yum /var/cache/cups /var/cache/PackageKit && \
     chmod 755 /usr/local/bin/entrypoint.sh
 
 VOLUME /var/account
