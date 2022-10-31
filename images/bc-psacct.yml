@@ -5,7 +5,7 @@ items:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
     metadata:
-      name: collector-sysstat
+      name: collector-psacct
     spec:
       lookupPolicy:
         local: false
@@ -14,15 +14,15 @@ items:
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
     metadata:
-      name: collector-sysstat
+      name: collector-psacct
       labels:
-        build: collector-sysstat
-        build-config: collector-sysstat
+        build: collector-psacct
+        build-config: collector-psacct
     spec:
       output:
         to:
           kind: ImageStreamTag
-          name: collector-sysstat:latest
+          name: collector-psacct:latest
       source:
         git:
           uri: https://git.p0f.net/gregab/linux-metrics-exporter.git
@@ -31,7 +31,7 @@ items:
       strategy:
         type: Docker
         dockerStrategy:
-          dockerfilePath: Containerfile-sysstat
+          dockerfilePath: Containerfile-psacct
           from:
             kind: ImageStreamTag
             name: ubi-minimal:latest
