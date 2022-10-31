@@ -12,6 +12,80 @@ TBD
 
 == Images ==
 
+This set of images requires a valid entitlement for RHEL (and consequently
+either a RHEL system to build on or a RHEL system to create an entitlement
+secret from).
+
+NOTE: The entitled system architecture needs to match the container host!
+
+If building the images using `podman` on an entitled host, no extra steps need
+to be performed as host entitlements will automatically be imported into the
+build container.
+
+If building the images in OpenShift Container Platform, you must make sure an
+entitlement secret and corresponding RHSM certificate secret are mounted inside
+the build pod in order for packages to be found and installed.
+
+The process is as follows.
+
+.Verify access to host entitlement data.
+[subs=+quotes]
+-------------------------------
+$ *ls -l /etc/pki/entitlement/*.pem /etc/rhsm/ca/*.pem*
+-rw-r--r--. 1 root root   3272 Oct 31 06:09 /etc/pki/entitlement/_6028779042203586857_-key.pem
+-rw-r--r--. 1 root root 149007 Oct 31 06:09 /etc/pki/entitlement/_6028779042203586857_.pem
+-rw-r--r--. 1 root root   2305 Sep  2  2021 /etc/rhsm/ca/redhat-entitlement-authority.pem
+-rw-r--r--. 1 root root   7411 Sep  2  2021 /etc/rhsm/ca/redhat-uep.pem
+-------------------------------
+
+.Create corresponding secrets.
+[subs=+quotes]
+-------------------------------
+$ *oc create secret generic etc-pki-entitlement \*
+    *--from-file=/etc/pki/entitlement/_6028779042203586857_-key.pem \*
+    *--from-file=/etc/pki/entitlement/_6028779042203586857_.pem*
+secret/etc-pki-entitlement created
+
+$ *oc create secret generic rhsm-ca \*
+    *--from-file=/etc/rhsm/ca/redhat-entitlement-authority.pem \*
+    *--from-file=/etc/rhsm/ca/redhat-uep.pem*
+secret/rhsm-ca created
+-------------------------------
+
+.Make sure the BuildConfig mounts those secrets.
+[subs=+quotes]
+-------------------------------
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+...
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Containerfile-psacct
+      from:
+        kind: ImageStreamTag
+        name: ubi-minimal:latest
+      **volumes:
+        - source:
+            type: Secret
+            secret:
+              secretName: etc-pki-entitlement
+          name: etc-pki-entitlement
+          mounts:
+            - destinationPath: /etc/pki/entitlement
+        - source:
+            type: Secret
+            secret:
+              secretName: rhsm-ca
+          name: rhsm-ca
+          mounts:
+            - destinationPath: /etc/rhsm/ca**
+-------------------------------
+
+`Containerfile` instructions are written such that they should work without
+modification regardless of whether the build is running in `podman` on an
+entitled host or inside a correctly configured OpenShift builder pod.
+
 === SAR ===
 
 Sar image is based on ubi-micro and includes just the `sysstat` package.
