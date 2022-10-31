@@ -4,7 +4,7 @@ USER 0
 
 COPY entrypoint-sysstat.sh /usr/local/bin/entrypoint.sh
 
-RUN microdnf install sysstat && \
+RUN microdnf -y install sysstat && \
     rm -rf /var/lib/dnf /var/cache/dnf /var/cache/cups /var/cache/PackageKit && \
     chmod 755 /usr/local/bin/entrypoint.sh
 
@@ -17,7 +17,7 @@ LABEL description="Minimal sysstat collector sidecar image" \
 	io.k8s.description="Minimal sysstat collector sidecar image" \
 	io.k8s.display-name="sysstat collector" \
 	io.openshift.expose-services="" \
-	maintainer="Grega Bremec <gregab@p0f.net> \
+	maintainer="Grega Bremec <gregab@p0f.net>" \
 	vendor="P0F" \
 	version="v1.0" \
 	release="1.0" \
