@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: List
+metadata: {}
+items:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: collector-sysstat
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: quay.io/benko/ocp-collector-sysstat:latest
+          importPolicy: {}
+          referencePolicy:
+            type: Source
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: collector-psacct
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: quay.io/benko/ocp-collector-psacct:latest
+          importPolicy: {}
+          referencePolicy:
+            type: Source
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: metrics-exporter
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: quay.io/benko/ocp-metrics-exporter:latest
+          importPolicy: {}
+          referencePolicy:
+            type: Source
