@@ -88,7 +88,7 @@ entitled host or inside a correctly configured OpenShift builder pod.
 
 === SAR ===
 
-Sar image is based on ubi-micro and includes just the `sysstat` package.
+Sar image is based on `ubi-minimal` and includes just the `sysstat` package.
 
 It expects a volume to be attached at `/var/log/sa`.
 
@@ -100,7 +100,7 @@ It also *requires* access to host's network namespace if you want to measure net
 
 === PSACCT ===
 
-Sar image is based on ubi-micro and includes just the `psacct` package.
+Sar image is based on `ubi-minimal` and includes just the `psacct` package.
 
 It expects a volume to be attached at `/var/account`.
 
