@@ -18,9 +18,22 @@ secret from).
 
 NOTE: The entitled system architecture needs to match the container host!
 
+=== Building with Podman ===
+
 If building the images using `podman` on an entitled host, no extra steps need
 to be performed as host entitlements will automatically be imported into the
 build container.
+
+NOTE: When building for an architecture without the `ubi-minimal` image or on a
+      host that can not be entitled (f.e. Fedora CoreOS), you can choose a
+      different base image by using the `--from` option in `podman build`:
++
+[subs=+quotes]
+-------------------------------
+$ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
+-------------------------------
+
+=== Building in OpenShift ===
 
 If building the images in OpenShift Container Platform, you must make sure an
 entitlement secret and corresponding RHSM certificate secret are mounted inside
@@ -85,6 +98,10 @@ kind: BuildConfig
 `Containerfile` instructions are written such that they should work without
 modification regardless of whether the build is running in `podman` on an
 entitled host or inside a correctly configured OpenShift builder pod.
+
+NOTE: Key thing in `Containerfile` steps is to remove `/etc/rhsm-host` at some
+      point unless `/etc/pki/entitlement-host` contains something (such as for
+      example, valid entitlemets). Both are symlinks to `/run/secrets`.
 
 === SAR ===
 
