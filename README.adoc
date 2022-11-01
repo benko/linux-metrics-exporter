@@ -18,6 +18,34 @@ secret from).
 
 NOTE: The entitled system architecture needs to match the container host!
 
+IMPORTANT: You do not have to build the images, they are already provided by the `is-readymade.yml` resource.
+
+=== SAR ===
+
+Sar image is based on `ubi-minimal` and includes just the `sysstat` package.
+
+It expects a volume to be attached at `/var/log/sa`.
+
+Entrypoint takes care of initialising the volume and rotating any old `sar` files out of the way.
+
+It *requires* to be executed under `root` UID.
+
+It also *requires* access to host's network namespace if you want to measure network statistics.
+
+=== PSACCT ===
+
+Sar image is based on `ubi-minimal` and includes just the `psacct` package.
+
+It expects a volume to be attached at `/var/account`.
+
+Entrypoint takes care of initialising the volume and rotating any old `pacct` files out of the way.
+
+In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a rootless container), it also *requires* the `CAP_SYS_PACCT` capability (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host` podman option).
+
+=== Exporter ===
+
+TBD
+
 === Building with Podman ===
 
 If building the images using `podman` on an entitled host, no extra steps need
@@ -103,32 +131,4 @@ entitled host or inside a correctly configured OpenShift builder pod.
 NOTE: Key thing in `Containerfile` steps is to remove `/etc/rhsm-host` at some
       point unless `/etc/pki/entitlement-host` contains something (such as for
       example, valid entitlemets). Both are symlinks to `/run/secrets`.
-
-=== SAR ===
-
-Sar image is based on `ubi-minimal` and includes just the `sysstat` package.
-
-It expects a volume to be attached at `/var/log/sa`.
-
-Entrypoint takes care of initialising the volume and rotating any old `sar` files out of the way.
-
-It *requires* to be executed under `root` UID.
-
-It also *requires* access to host's network namespace if you want to measure network statistics.
-
-=== PSACCT ===
-
-Sar image is based on `ubi-minimal` and includes just the `psacct` package.
-
-It expects a volume to be attached at `/var/account`.
-
-Entrypoint takes care of initialising the volume and rotating any old `pacct` files out of the way.
-
-In addition to *requiring* execution under `root` UID, it also *requires* the `SYS_PACCT` capability.
-
-It also *requires* access to host's PID namespace (`--pid=host` podman option).
-
-=== Exporter ===
-
-TBD
 
