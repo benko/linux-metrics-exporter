@@ -6,6 +6,17 @@
 . Container Image for PSACCT
 . Container Image for Exporter
 
+== How It All Works ==
+
+Very simple: two sidecar containers, `collector-sysstat` and
+`collector-psacct`, produce data on a shared ephemeral volume, and the third
+container, `metrics-exporter`, consumes the data and exposes it on the
+`/metrics` endpoint where Prometheus can pick them up.
+
+The specific thing about how the entire composition works is that care has been
+taken, especially with `psacct`, that accounting files are regularly moved out
+of the way in order to keep the disk space utilisation as low as possible.
+
 == Deployment ==
 
 TBD
@@ -16,29 +27,27 @@ This set of images requires a valid entitlement for RHEL (and consequently
 either a RHEL system to build on or a RHEL system to create an entitlement
 secret from).
 
-NOTE: The entitled system architecture needs to match the container host!
-
 IMPORTANT: You do not have to build the images, they are already provided by the `is-readymade.yml` resource.
 
 === SAR ===
 
-Sar image is based on `ubi-minimal` and includes just the `sysstat` package.
+The _system activity reporting_ image is based on `ubi-minimal` and includes just the `sysstat` package.
 
 It expects a volume to be attached at `/var/log/sa`.
 
-Entrypoint takes care of initialising the volume and rotating any old `sar` files out of the way.
+Entrypoint takes care of initialising the `saXX` files and rotating any old files out of the way.
 
-It *requires* to be executed under `root` UID (can be rootless, but may affect your data).
+It *requires* to be executed under `root` UID (can be rootless, but that may affect your data depending on host and container configuration).
 
-It also *requires* access to host's network namespace if you want to measure network statistics.
+It also *requires* access to host's network namespace if you want to measure global network statistics.
 
 === PSACCT ===
 
-Sar image is based on `ubi-minimal` and includes just the `psacct` package.
+The _process accounting_ image is based on `ubi-minimal` and includes just the `psacct` package.
 
 It expects a volume to be attached at `/var/account`.
 
-Entrypoint takes care of initialising the volume and rotating any old `pacct` files out of the way.
+Entrypoint takes care of rotating any old `pacct` files out of the way.
 
 In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a rootless container), it also *requires* the `CAP_SYS_PACCT` capability (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host`).
 
@@ -67,6 +76,8 @@ $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/
 If building the images in OpenShift Container Platform, you must make sure an
 entitlement secret and corresponding RHSM certificate secret are mounted inside
 the build pod in order for packages to be found and installed.
+
+NOTE: The entitled system architecture needs to match the container host!
 
 The process is as follows.
 

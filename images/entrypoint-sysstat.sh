@@ -25,7 +25,7 @@ echo "Collecting and reporting system activity statistics every ${PERIOD} second
 case ${STARTUP_SCRATCH:-0} in
     1|yes|true)
 	echo "Removing existing SA1 data due to scratch-on-startup being ${STARTUP_SCRATCH}..."
-	rm -rf /var/log/sa
+	rm -f /var/log/sa/sa*
 	;;
     *)
 	echo "Skipping scratch-on-startup..."

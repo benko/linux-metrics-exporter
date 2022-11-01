@@ -48,7 +48,7 @@ esac
 case ${STARTUP_SCRATCH:-0} in
     1|yes|true)
 	echo "Removing existing accounting data due to scratch-on-startup being ${STARTUP_SCRATCH}..."
-	rm -rf /var/account
+	rm -f /var/account/pacct*
 	;;
     *)
 	echo "Skipping scratch-on-startup..."
