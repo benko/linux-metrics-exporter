@@ -28,7 +28,7 @@ It expects a volume to be attached at `/var/log/sa`.
 
 Entrypoint takes care of initialising the volume and rotating any old `sar` files out of the way.
 
-It *requires* to be executed under `root` UID.
+It *requires* to be executed under `root` UID (can be rootless, but may affect your data).
 
 It also *requires* access to host's network namespace if you want to measure network statistics.
 
@@ -40,7 +40,7 @@ It expects a volume to be attached at `/var/account`.
 
 Entrypoint takes care of initialising the volume and rotating any old `pacct` files out of the way.
 
-In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a rootless container), it also *requires* the `CAP_SYS_PACCT` capability (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host` podman option).
+In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a rootless container), it also *requires* the `CAP_SYS_PACCT` capability (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host`).
 
 === Exporter ===
 
