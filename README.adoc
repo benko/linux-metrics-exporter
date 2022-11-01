@@ -28,7 +28,6 @@ build container.
 NOTE: When building for an architecture without the `ubi-minimal` image or on a
       host that can not be entitled (f.e. Fedora CoreOS), you can choose a
       different base image by using the `--from` option in `podman build`:
-
 [subs=+quotes]
 -------------------------------
 $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
