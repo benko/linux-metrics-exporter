@@ -24,14 +24,16 @@ If building the images using `podman` on an entitled host, no extra steps need
 to be performed as host entitlements will automatically be imported into the
 build container.
 
+******
 NOTE: When building for an architecture without the `ubi-minimal` image or on a
       host that can not be entitled (f.e. Fedora CoreOS), you can choose a
       different base image by using the `--from` option in `podman build`:
-+
+
 [subs=+quotes]
 -------------------------------
 $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
 -------------------------------
+******
 
 === Building in OpenShift ===
 
