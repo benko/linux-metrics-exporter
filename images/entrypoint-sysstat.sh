@@ -64,6 +64,7 @@ while [ 1 ]; do
     if [ ${NEW_HOUR} -lt ${PREV_HOUR} ]; then
 	echo "Marking last saXX as rotated..."
 	/usr/lib64/sa/sa1 --rotate
+	# TODO: remove the old file
     fi
     PREV_HOUR=${NEW_HOUR}
 

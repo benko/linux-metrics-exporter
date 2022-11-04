@@ -67,8 +67,16 @@ while [ 1  ]; do
     sleep ${PERIOD}
 
     # Report after waking up.
+    #	Looks like the choice is between paging and I/O, can't have both.
+
+    # This one prints paging info...
     /usr/sbin/sa -ajlp > /var/account/psacct-dump-all
-    /usr/sbin/dump-acct /var/account/pacct > /var/account/psacct-dump-raw
+
+    # ...and this one prints total I/O operations (which seems to be unsupported).
+    #/usr/sbin/sa -ajlD > /var/account/psacct-dump-all
+
+    # This is less than very useful.
+    #/usr/sbin/dump-acct /var/account/pacct > /var/account/psacct-dump-raw
 
     # Could make a CSV out of the above "sa":
     #   | tr -s' ' | sed 's/^ //; s/ /,/g'
