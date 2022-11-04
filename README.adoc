@@ -14,12 +14,53 @@ container, `metrics-exporter`, consumes the data and exposes it on the
 `/metrics` endpoint where Prometheus can pick them up.
 
 The specific thing about how the entire composition works is that care has been
-taken, especially with `psacct`, that accounting files are regularly moved out
-of the way in order to keep the disk space utilisation as low as possible.
+taken, especially with `psacct` (which can grow excessively during periods of
+high activity), that accounting files are regularly truncated or moved out of
+the way in order to keep the disk space utilisation as low as possible.
 
-== Deployment ==
+== OpenShift Deployment ==
 
 TBD
+
+== Standalone ==
+
+Start the composition.
+
+// TODO: podman pod
+
+[subs+=quotes]
+------
+$ *podman volume create metrics*
+metrics
+
+$ *podman run -d --rm -v metrics:/var/account --cap-add SYS_PACCT --pid=host collector-psacct:latest*
+dd9f4825d23614df2acefdcd70ec1e6c3ea18a58b86c9d17ddc4f91038487919
+
+$ *podman run -d --rm -v metrics:/var/log/sa collector-sysstat*
+ec3d0957525cc907023956a185b15123c20947460a48d37196d511ae42de2e27
+
+$ *podman run --name exporter -d --rm -v metrics:/metrics -p 8080:8080 metrics-exporter*
+d4840ad57bfffd4b069e7c2357721ff7aaa6b6ee77f90ad4866a76a1ceb6adb7
+
+------
+
+Add prometheus and grafana.
+
+[subs+=quotes]
+------
+$ *podman run --name prometheus \*
+		*-d --rm \*
+		*-v ./test/prometheus.yml:/etc/prometheus/prometheus.yml*
+		*-v prometheus:/prometheus \*
+		*-p 9090:9090 \*
+		*registry.redhat.io/openshift4/ose-prometheus:v4.11*
+6eae04677fcded65bbe1cb7f66aa887d94587977a0616f7ec838f9453702474c
+
+$ *podman run --name grafana -d --rm -p 3000:3000 \*
+		*-v ./test/grafana.ini:/etc/grafana/grafana.ini \*
+		*registry.redhat.io/openshift4/ose-grafana:v4.11*
+78d5bfa7977923b828c1818bb877fa87bdd96086cc8c875fbc46073489f6760e
+------
 
 == Images ==
 
@@ -41,6 +82,18 @@ It *requires* to be executed under `root` UID (can be rootless, but that may aff
 
 It also *requires* access to host's network namespace if you want to measure global network statistics.
 
+// NOTE: When running in a pod, the below is irrelevant as the exporter sets
+//	    the hostname, and you can override it there. It does however obtain
+//	    the default hostname from data sources.
+//
+// If aggregating from several hosts, you also need to use the hosts' UTS
+// namespace to report correct hostnames, or set the corresponding environment
+// variables to override detection.
+
+==== Parameters ====
+
+TBD
+
 === PSACCT ===
 
 The _process accounting_ image is based on `ubi-minimal` and includes just the `psacct` package.
@@ -51,7 +104,40 @@ Entrypoint takes care of rotating any old `pacct` files out of the way.
 
 In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a rootless container), it also *requires* the `CAP_SYS_PACCT` capability (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host`).
 
+// NOTE: When running in a pod, the below is irrelevant as the exporter sets
+//	    the hostname, and you can override it there. It does however obtain
+//	    the default hostname from data sources.
+//
+// If aggregating from several hosts, you also need to use the hosts' UTS
+// namespace to report correct hostnames, or set the corresponding environment
+// variables to override detection.
+
+==== Parameters ====
+
+TBD
+
 === Exporter ===
+
+TBD
+
+// TODO: Add support for hostname overrides in app.
+
+// run a maven registry.access.redhat.com/ubi9/openjdk-17 container:
+//
+// podman volume create maven
+//
+// podman run -it \
+//		    --name exporter \
+//		    -v maven:/home/default/.m2/repository \
+//		    -v metrics:/metrics \
+//		    -v /Users/johndoe/Documents/workspaces/projects/p0f/linux-metrics-exporter/exporter:/exporter \
+//		    -p 8080:8080 \
+//	    registry.access.redhat.com/ubi9/openjdk-17 bash
+//
+// $ cd /exporter
+// $ mvn quarkus:dev
+
+==== Parameters ====
 
 TBD
 
@@ -61,15 +147,14 @@ If building the images using `podman` on an entitled host, no extra steps need
 to be performed as host entitlements will automatically be imported into the
 build container.
 
-******
 NOTE: When building for an architecture without the `ubi-minimal` image or on a
-      host that can not be entitled (f.e. Fedora CoreOS), you can choose a
-      different base image by using the `--from` option in `podman build`:
+host that can not be entitled (f.e. Fedora CoreOS), you can choose a different
+base image by using the `--from` option in `podman build`:
++
 [subs=+quotes]
 -------------------------------
 $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
 -------------------------------
-******
 
 === Building in OpenShift ===
 
