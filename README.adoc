@@ -11,7 +11,7 @@
 Very simple: two sidecar containers, `collector-sysstat` and
 `collector-psacct`, produce data on a shared ephemeral volume, and the third
 container, `metrics-exporter`, consumes the data and exposes it on the
-`/metrics` endpoint where Prometheus can pick them up.
+`/q/metrics` endpoint where Prometheus can pick them up.
 
 The specific thing about how the entire composition works is that care has been
 taken, especially with `psacct` (which can grow excessively during periods of
@@ -76,7 +76,9 @@ The _system activity reporting_ image is based on `ubi-minimal` and includes jus
 
 It expects a volume to be attached at `/var/log/sa`.
 
-Entrypoint takes care of initialising the `saXX` files and rotating any old files out of the way.
+Entrypoint takes care of initialising the `saXX` files.
+
+// TODO: and rotating any old files out of the way.
 
 It *requires* to be executed under `root` UID (can be rootless, but that may affect your data depending on host and container configuration).
 
@@ -149,8 +151,7 @@ build container.
 
 NOTE: When building for an architecture without the `ubi-minimal` image or on a
 host that can not be entitled (f.e. Fedora CoreOS), you can choose a different
-base image by using the `--from` option in `podman build`:
-+
+base image by using the `--from` option in `podman build`.
 [subs=+quotes]
 -------------------------------
 $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
