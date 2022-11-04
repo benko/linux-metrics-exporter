@@ -1,0 +1,21 @@
+[
+    {
+        "operation": "shift",
+        "spec": {
+            "sysstat": {
+                "hosts": {
+                    "0": {
+                        "nodename": "hostname",
+                        "number-of-cpus": "num-cpus",
+                        "statistics": {
+                            "0": {
+                                "*": "&0"
+                            }
+                        }
+                    }   
+                }
+            }
+        
+        }
+    }
+]
