@@ -16,7 +16,7 @@ public class SysstatConsumer extends RouteBuilder {
                 "readLockCheckInterval=250&" +
                 "move=done/${date:now:yyyyMMdd}/sysstat-${date:now:yyyyMMdd-HHmmss}")
             .routeId("sysstat-reader")
-            .log(LoggingLevel.TRACE, "Original Sysstat Payload: ${body}")
+            .log(LoggingLevel.DEBUG, "Original Sysstat Payload: ${body}")
             /*
              * Need to transform:
              * - sysstat.hosts[0].nodename -> sysstat.hosts[0].statistics[0].hostname
@@ -33,9 +33,9 @@ public class SysstatConsumer extends RouteBuilder {
                                     "?inputType=JsonString" +
                                     "&outputType=JsonString" +
                                     "&transformDsl=Chainr")
-            .log(LoggingLevel.TRACE, "Transformed Sysstat Json: ${body}")
+            .log(LoggingLevel.DEBUG, "Transformed Sysstat Json: ${body}")
             .unmarshal(new JacksonDataFormat(SysstatMeasurement.class))
-            .log(LoggingLevel.DEBUG, "Unmarshaled Sysstat: ${body}")
+            .log(LoggingLevel.INFO, "Unmarshaled Sysstat: ${body}")
             .to("bean:sysstatMetrics?method=processMetricRecord&scope=Request");
     }
 }

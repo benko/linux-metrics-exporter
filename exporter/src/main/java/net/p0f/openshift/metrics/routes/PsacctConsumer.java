@@ -20,12 +20,12 @@ public class PsacctConsumer extends RouteBuilder {
                 "readLockCheckInterval=250&" +
                 "move=done/${date:now:yyyyMMdd}/psacct-${date:now:yyyyMMdd-HHmmss}")
             .routeId("psacct-reader")
-            .log(LoggingLevel.TRACE, "Original Psacct Payload: ${body}")
+            .log(LoggingLevel.DEBUG, "Original Psacct Payload: ${body}")
             // Reset current gauge status upon receiving a new message.
             .wireTap("direct:resetPsacct")
             // Split, unmarshall, and account for, all new records.
             .split().tokenize("\n").parallelProcessing()
-            .log(LoggingLevel.TRACE, "Split Psacct Record: ${body}")
+            .log(LoggingLevel.DEBUG, "Split Psacct Record: ${body}")
             // TODO: See into error-handler ways of avoiding this choice.
             .choice()
                 .when(bodyAs(String.class).isEqualTo(""))
@@ -34,9 +34,9 @@ public class PsacctConsumer extends RouteBuilder {
                     .log(LoggingLevel.WARN, "Illegal record: ${body}")
                 .otherwise()
                     .process(toCsv)
-                    .log(LoggingLevel.TRACE, "Transformed Psacct CSV: ${body}")
+                    .log(LoggingLevel.DEBUG, "Transformed Psacct CSV: ${body}")
                     .unmarshal(fromCsv)
-                    .log(LoggingLevel.DEBUG, "Unmarshaled Psacct: ${body}")
+                    .log(LoggingLevel.INFO, "Unmarshaled Psacct: ${body}")
                     .to("seda:psacct")
             .endChoice();
     }
