@@ -22,6 +22,23 @@ public class SysstatMetrics {
     SysstatMeasurement lastMeasurement = null;
 
     public void processMetricRecord(SysstatMeasurement sm) {
+        // Sanity check first.
+        if (sm.getCpuLoad() == null ||
+                sm.getDisk() == null ||
+                sm.getHugepages() == null ||
+                sm.getIo() == null ||
+                sm.getKernel() == null ||
+                sm.getMemory() == null ||
+                sm.getNetwork() == null ||
+                sm.getPaging() == null ||
+                sm.getProcessAndContextSwitch() == null ||
+                sm.getPsi() == null ||
+                sm.getQueue() == null ||
+                sm.getSwapPages() == null) {
+            LOG.severe("Some of the sysstat measurement fields are null. Rejecting record.");
+            throw new IllegalStateException("Some of the sysstat measurement fields are null. Rejecting record.");
+        }
+
         LOG.fine("Updating sysstat metrics records...");
 
         if (this.lastMeasurement == null) {
