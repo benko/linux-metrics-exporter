@@ -10,14 +10,16 @@ metadata:
 spec:
   minReadySeconds: 15
   selector:
-    app: metrics
-    type: daemonset
-    project: exporter
+    matchLabels:
+      app: metrics
+      type: daemonset
+      project: exporter
   updateStrategy:
     type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+    #rollingUpdate:
+    #  # This shit is either/or?
+    #  maxSurge: 25%
+    #  maxUnavailable: 25%
   template:
     metadata:
       labels:
@@ -29,16 +31,16 @@ spec:
         - name: collector-sysstat
           image: " "
           env:
-            - key: PERIOD
+            - name: PERIOD
               value: "15"
-            - key: STARTUP_SCRATCH
+            - name: STARTUP_SCRATCH
               value: "1"
-            - key: STARTUP_ROTATE
+            - name: STARTUP_ROTATE
               value: "0"
-          livenessProbe: {}
-            # something like /var/log/sa/sysstat-dump.json not being older than ${PERIOD}
-          readinessProbe: {}
-            # /var/log/sa/sysstat-dump.json exists
+          #livenessProbe: {}
+          #   something like /var/log/sa/sysstat-dump.json not being older than ${PERIOD}
+          #readinessProbe: {}
+          #   /var/log/sa/sysstat-dump.json exists
           resources: {}
             # TBD
           securityContext:
@@ -56,16 +58,16 @@ spec:
         - name: collector-psacct
           image: " "
           env:
-            - key: PERIOD
+            - name: PERIOD
               value: "15"
-            - key: CUMULATIVE
+            - name: CUMULATIVE
               value: "0"
-            - key: STARTUP_SCRATCH
+            - name: STARTUP_SCRATCH
               value: "1"
-          livenessProbe: {}
-            # something like /var/account/psacct-dump-raw not being older than ${PERIOD}
-          readinessProbe: {}
-            # /var/account/psacct-dump-raw exists
+          #livenessProbe: {}
+          #   something like /var/account/psacct-dump-raw not being older than ${PERIOD}
+          #readinessProbe: {}
+          #   /var/account/psacct-dump-raw exists
           resources: {}
             # TBD
           securityContext:
@@ -84,16 +86,16 @@ spec:
         - name: metrics-exporter
           image: " "
           env:
-            - key: HOSTNAME_FROM_API
+            - name: HOSTNAME_FROM_API
               value: "true"
           ports:
             - name: http
               protocol: TCP
               containerPort: 8080
-          livenessProbe: {}
-            # /q/metrics returning 200?
-          readinessProbe: {}
-            # /metrics/version returning 200?
+          #livenessProbe: {}
+          #   /q/metrics returning 200?
+          #readinessProbe: {}
+          #   /metrics/version returning 200?
           resources: {}
             # TBD
           # No special privileges for this one.
