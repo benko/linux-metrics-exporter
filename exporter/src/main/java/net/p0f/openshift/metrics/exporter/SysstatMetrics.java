@@ -14,14 +14,14 @@ import net.p0f.openshift.metrics.model.SysstatMeasurement;
 @ApplicationScoped
 @Named("sysstatMetrics")
 public class SysstatMetrics {
-    static final Logger LOG = Logger.getLogger(SysstatMeasurement.class.getName());
+    static final Logger LOG = Logger.getLogger(SysstatMetrics.class.getName());
 
     @Inject
     MeterRegistry mr;
 
     SysstatMeasurement lastMeasurement = null;
 
-    public boolean isRecordValid(SysstatMeasurement sm) {
+    public static boolean isRecordValid(SysstatMeasurement sm) {
         LOG.fine("Checking record validity of " + sm);
 
         String nullMetrics = "";
@@ -66,12 +66,7 @@ public class SysstatMetrics {
         nullMetrics.replaceFirst(", $", "");
         LOG.fine("Validity check result: \"" + nullMetrics + "\"");
 
-        if (nullMetrics.length() != 0) {
-            LOG.severe("Null sysstat fields, rejecting record: " + nullMetrics);
-            return false;
-        }
-
-        return true;
+        return nullMetrics.length() == 0;
     }
 
     public void processMetricRecord(SysstatMeasurement sm) {

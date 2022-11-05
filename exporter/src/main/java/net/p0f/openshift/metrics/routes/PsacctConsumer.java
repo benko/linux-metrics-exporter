@@ -26,11 +26,11 @@ public class PsacctConsumer extends RouteBuilder {
             // Split, unmarshall, and account for, all new records.
             .split().tokenize("\n").parallelProcessing()
             .log(LoggingLevel.DEBUG, "Split Psacct Record: ${body}")
-            // TODO: See into error-handler ways of avoiding this choice.
+            .setHeader("X-Is-Record-Valid", method(PsacctToCsv.class, "isRecordValid"))
             .choice()
                 .when(bodyAs(String.class).isEqualTo(""))
                     .log(LoggingLevel.DEBUG, "Skipping empty record.")
-                .when(method(PsacctToCsv.class, "isRecordValid").not())
+                .when(header("X-Is-Record-Valid").isEqualTo(false))
                     .log(LoggingLevel.WARN, "Illegal record: ${body}")
                 .otherwise()
                     .process(toCsv)
