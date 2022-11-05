@@ -8,7 +8,7 @@ roleRef:
   kind: Role
   name: prometheus-scrape
 subjects:
-- apiGroup: v1
+- apiGroup: ""
   kind: ServiceAccount
   name: prometheus-k8s
   namespace: prometheus
