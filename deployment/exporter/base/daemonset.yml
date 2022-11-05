@@ -30,11 +30,11 @@ spec:
           image: " "
           env:
             - key: PERIOD
-              value: 15
+              value: "15"
             - key: STARTUP_SCRATCH
-              value: 1
+              value: "1"
             - key: STARTUP_ROTATE
-              value: 0
+              value: "0"
           livenessProbe: {}
             # something like /var/log/sa/sysstat-dump.json not being older than ${PERIOD}
           readinessProbe: {}
@@ -57,11 +57,11 @@ spec:
           image: " "
           env:
             - key: PERIOD
-              value: 15
+              value: "15"
             - key: CUMULATIVE
-              value: 0
+              value: "0"
             - key: STARTUP_SCRATCH
-              value: 1
+              value: "1"
           livenessProbe: {}
             # something like /var/account/psacct-dump-raw not being older than ${PERIOD}
           readinessProbe: {}
@@ -85,7 +85,7 @@ spec:
           image: " "
           env:
             - key: HOSTNAME_FROM_API
-              value: true
+              value: "true"
           ports:
             - name: http
               protocol: TCP
