@@ -22,6 +22,8 @@ public class SysstatMetrics {
     SysstatMeasurement lastMeasurement = null;
 
     public boolean isRecordValid(SysstatMeasurement sm) {
+        LOG.fine("Checking record validity of " + sm);
+
         String nullMetrics = "";
 
         if (sm.getCpuLoad() == null) {
@@ -61,11 +63,11 @@ public class SysstatMetrics {
             nullMetrics += "SwapPages, ";
         }
 
-        nullMetrics.replaceAll(", $", "");
+        nullMetrics.replaceFirst(", $", "");
+        LOG.fine("Validity check result: \"" + nullMetrics + "\"");
 
         if (nullMetrics.length() != 0) {
             LOG.severe("Null sysstat fields, rejecting record: " + nullMetrics);
-            // throw new IllegalStateException("Null sysstat fields, rejecting record: " + nullMetrics);
             return false;
         }
 
