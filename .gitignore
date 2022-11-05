@@ -3,5 +3,6 @@
 *.vim
 *.code-workspace
 .vscode
+data
 target
 tmp*
