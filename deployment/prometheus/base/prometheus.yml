@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: metrics
+  namespace: prometheus
+spec:
+  serviceMonitorSelector: {}
+  alerting:
+    alertmanagers:
+      - namespace: monitoring
+        name: alertmanager-main
+        port: web
+  probeSelector: {}
+  podMonitorSelector: {}
+  ruleSelector: {}
+  replicas: 1
+  retention: 1w
+  serviceAccountName: prometheus-k8s
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: nfs-storage
+        resources:
+          requests:
+            storage: 10Gi
