@@ -87,8 +87,6 @@ spec:
         - name: metrics-exporter
           image: quay.io/benko/ocp-metrics-exporter:latest
           env:
-            - name: HOSTNAME_FROM_API
-              value: "true"
             - name: QUARKUS_HTTP_PORT
               value: "28080"
           ports:
