@@ -136,7 +136,7 @@ spec:
       terminationGracePeriodSeconds: 15
       # Need to adjust this whenever there are dedicated control plane or
       # other tainted nodes.
-      tolerations: {}
+      tolerations: []
       volumes:
         - name: metrics-shared-volume
           emptyDir: {}
