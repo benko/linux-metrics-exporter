@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: exporter-monitor
+  namespace: prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+      - exporter
+  selector:
+    matchLabels:
+      app: metrics
+  endpoints:
+    - interval: 15s
+      path: /q/metrics
+      targetPort: 28080
