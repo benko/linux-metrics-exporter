@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+metadata:
+  name: metrics
+  namespace: exporter
+  labels:
+    app: metrics
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"collector-sysstat:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-sysstat\")].image"},{"from":{"kind":"ImageStreamTag","name":"collector-psacct:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-psacct\")].image"},{"from":{"kind":"ImageStreamTag","name":"metrics-exporter:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"metrics-exporter\")].image"}]'
+spec:
+  minReadySeconds: 15
+  selector:
+    app: metrics
+    type: daemonset
+    project: exporter
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: metrics
+        type: daemonset
+        project: exporter
+    spec:
+      containers:
+        - name: collector-sysstat
+          image: " "
+          env:
+            - key: PERIOD
+              value: 15
+            - key: STARTUP_SCRATCH
+              value: 1
+            - key: STARTUP_ROTATE
+              value: 0
+          livenessProbe: {}
+            # something like /var/log/sa/sysstat-dump.json not being older than ${PERIOD}
+          readinessProbe: {}
+            # /var/log/sa/sysstat-dump.json exists
+          resources: {}
+            # TBD
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities: {}
+              # none
+            privileged: true
+            runAsGroup: 0
+            runAsNonRoot: false
+            runAsUser: 0
+          volumeMounts:
+            - name: metrics-shared-volume
+              mountPath: /var/log/sa
+              readOnly: false
+        - name: collector-psacct
+          image: " "
+          env:
+            - key: PERIOD
+              value: 15
+            - key: CUMULATIVE
+              value: 0
+            - key: STARTUP_SCRATCH
+              value: 1
+          livenessProbe: {}
+            # something like /var/account/psacct-dump-raw not being older than ${PERIOD}
+          readinessProbe: {}
+            # /var/account/psacct-dump-raw exists
+          resources: {}
+            # TBD
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - CAP_SYS_PACCT
+            privileged: true
+            runAsGroup: 0
+            runAsNonRoot: false
+            runAsUser: 0
+          volumeMounts:
+            - name: metrics-shared-volume
+              mountPath: /var/account
+              readOnly: false
+        - name: metrics-exporter
+          image: " "
+          env:
+            - key: HOSTNAME_FROM_API
+              value: true
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 8080
+          livenessProbe: {}
+            # /q/metrics returning 200?
+          readinessProbe: {}
+            # /metrics/version returning 200?
+          resources: {}
+            # TBD
+          # No special privileges for this one.
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {}
+            privileged: false
+            runAsNonRoot: true
+            #runAsUser: namespace-assigned
+          volumeMounts:
+            - name: metrics-shared-volume
+              mountPath: /metrics
+              readOnly: false
+      # Must cover all the nodes.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/master
+                    operator: Exists
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
+      # VERY important, these three!
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true
+      # Gives us the best possible chance of not being evicted.
+      priorityClassName: system-node-critical
+      # VERY important, these two!
+      securityContext:
+        # Sets a default that can be overridden by container.
+        runAsNonRoot: false
+        # Need to make sure even unprivileged exporter can write.
+        supplementalGroups:
+          - 0
+      serviceAccountName: exporter
+      # Make that somewhere around $PERIOD, but larger.
+      terminationGracePeriodSeconds: 15
+      # Need to adjust this whenever there are dedicated control plane or
+      # other tainted nodes.
+      tolerations: {}
+      volumes:
+        - name: metrics-shared-volume
+          emptyDir: {}

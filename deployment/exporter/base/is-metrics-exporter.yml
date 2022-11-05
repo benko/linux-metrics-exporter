@@ -1,0 +1,16 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: metrics-exporter
+  namespace: exporter
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: quay.io/benko/ocp-metrics-exporter:latest
+      importPolicy: {}
+      referencePolicy:
+        type: Source
