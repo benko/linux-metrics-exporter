@@ -89,6 +89,8 @@ spec:
           env:
             - name: HOSTNAME_FROM_API
               value: "true"
+            - name: QUARKUS_HTTP_PORT
+              value: "28080"
           ports:
             - name: http
               protocol: TCP
