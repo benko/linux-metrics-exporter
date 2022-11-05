@@ -92,6 +92,8 @@ spec:
             - name: http
               protocol: TCP
               containerPort: 8080
+              # Need some host port because hostNetwork==true.
+              hostPort: 28080
           #livenessProbe: {}
           #   /q/metrics returning 200?
           #readinessProbe: {}
@@ -120,6 +122,8 @@ spec:
               - matchExpressions:
                   - key: node-role.kubernetes.io/worker
                     operator: Exists
+      # We have affinity settings.
+      nodeSelector: {}
       # VERY important, these three!
       hostIPC: true
       hostNetwork: true
