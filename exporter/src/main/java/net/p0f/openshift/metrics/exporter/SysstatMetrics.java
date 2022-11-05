@@ -21,56 +21,28 @@ public class SysstatMetrics {
 
     SysstatMeasurement lastMeasurement = null;
 
-    public static boolean isRecordValid(SysstatMeasurement sm) {
-        LOG.fine("Checking record validity of " + sm);
-
-        String nullMetrics = "";
-
-        if (sm.getCpuLoad() == null) {
-            nullMetrics += "CpuLoad, ";
-        }
-        if (sm.getDisk() == null) {
-            nullMetrics += "Disk, ";
-        }
-        if (sm.getHugepages() == null) {
-            nullMetrics += "Hugepages, ";
-        }
-        if (sm.getIo() == null) {
-            nullMetrics += "Io, ";
-        }
-        if (sm.getKernel() == null) {
-            nullMetrics += "Kernel, ";
-        }
-        if (sm.getMemory() == null) {
-            nullMetrics += "Memory, ";
-        }
-        if (sm.getNetwork() == null) {
-            nullMetrics += "Network, ";
-        }
-        if (sm.getPaging() == null) {
-            nullMetrics += "Paging, ";
-        }
-        if (sm.getProcessAndContextSwitch() == null) {
-            nullMetrics += "ProcessAndContextSwitch, ";
-        }
-        if (sm.getPsi() == null) {
-            nullMetrics += "Psi, ";
-        }
-        if (sm.getQueue() == null) {
-            nullMetrics += "Queue, ";
-        }
-        if (sm.getSwapPages() == null) {
-            nullMetrics += "SwapPages, ";
-        }
-
-        nullMetrics.replaceFirst(", $", "");
-        LOG.fine("Validity check result: \"" + nullMetrics + "\"");
-
-        return nullMetrics.length() == 0;
-    }
-
     public void processMetricRecord(SysstatMeasurement sm) {
         LOG.fine("Updating sysstat metrics records...");
+
+        // sanitize fields that may be null
+        // cpuload may not be null
+        // process-and-context-switch may not be null
+        if (sm.getSwapPages() == null) {
+            sm.setSwapPages(new SysstatMeasurement.SwapPages());
+        }
+        // paging may not be null
+        // io may not be null
+        // memory may not be null
+        if (sm.getHugepages() == null) {
+            sm.setHugepages(new SysstatMeasurement.Hugepages());
+        }
+        // kernel may not be null
+        // queue may not be null
+        // disk may not be null
+        // network may not be null
+        if (sm.getPsi() == null) {
+            sm.setPsi(new SysstatMeasurement.Psi());
+        }
 
         if (this.lastMeasurement == null) {
             LOG.fine("Initialising sysstat metrics for " + sm.getHostname());
@@ -574,4 +546,69 @@ public class SysstatMetrics {
         }
     }
 
+    public static boolean isRecordValid(SysstatMeasurement sm) {
+        LOG.fine("Checking record validity of " + sm);
+
+        String nullMetrics = "";
+        String warnMetrics = "";
+
+        // cpuload may not be null
+        if (sm.getCpuLoad() == null) {
+            nullMetrics += "CpuLoad, ";
+        }
+        // process-and-context-switch may not be null
+        if (sm.getProcessAndContextSwitch() == null) {
+            nullMetrics += "ProcessAndContextSwitch, ";
+        }
+        // WARNING ONLY
+        if (sm.getSwapPages() == null) {
+            warnMetrics += "SwapPages, ";
+        }
+        // paging may not be null
+        if (sm.getPaging() == null) {
+            nullMetrics += "Paging, ";
+        }
+        // io may not be null
+        if (sm.getIo() == null) {
+            nullMetrics += "Io, ";
+        }
+        // memory may not be null
+        if (sm.getMemory() == null) {
+            nullMetrics += "Memory, ";
+        }
+        // WARNING ONLY
+        if (sm.getHugepages() == null) {
+            warnMetrics += "Hugepages, ";
+        }
+        // kernel may not be null
+        if (sm.getKernel() == null) {
+            nullMetrics += "Kernel, ";
+        }
+        // queue may not be null
+        if (sm.getQueue() == null) {
+            nullMetrics += "Queue, ";
+        }
+        // disk may not be null
+        if (sm.getDisk() == null) {
+            nullMetrics += "Disk, ";
+        }
+        // network may not be null
+        if (sm.getNetwork() == null) {
+            nullMetrics += "Network, ";
+        }
+        // WARNING ONLY
+        if (sm.getPsi() == null) {
+            warnMetrics += "Psi, ";
+        }
+        nullMetrics = nullMetrics.replaceFirst(", $", "");
+        warnMetrics = warnMetrics.replaceFirst(", $", "");
+
+        LOG.fine("Validity check result: ERRORS: \"" + nullMetrics + "\"");
+
+        if (warnMetrics.length() != 0) {
+            LOG.warning("Some sysstat fields are null: \"" + warnMetrics + "\"");
+        }
+
+        return nullMetrics.length() == 0;
+    }
 }

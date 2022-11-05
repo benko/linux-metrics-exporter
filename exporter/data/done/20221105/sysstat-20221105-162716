@@ -1,0 +1,103 @@
+{"sysstat": {
+	"hosts": [
+		{
+			"nodename": "master02",
+			"sysname": "Linux",
+			"release": "4.18.0-305.40.2.el8_4.x86_64",
+			"machine": "x86_64",
+			"number-of-cpus": 4,
+			"file-date": "2022-11-05",
+			"file-utc-time": "14:42:05",
+			"timezone": "UTC",
+			"statistics": [
+				{
+					"timestamp": {"date": "2022-11-05", "time": "14:47:16", "utc": 1, "interval": 10},
+					"cpu-load": [
+						{"cpu": "all", "usr": 7.77, "nice": 0.00, "sys": 4.29, "iowait": 0.58, "steal": 0.00, "irq": 1.31, "soft": 0.78, "guest": 0.00, "gnice": 0.00, "idle": 85.27},
+						{"cpu": "0", "usr": 7.96, "nice": 0.00, "sys": 4.23, "iowait": 0.40, "steal": 0.00, "irq": 1.31, "soft": 0.60, "guest": 0.00, "gnice": 0.00, "idle": 85.50},
+						{"cpu": "1", "usr": 7.89, "nice": 0.00, "sys": 4.25, "iowait": 0.51, "steal": 0.00, "irq": 1.42, "soft": 0.51, "guest": 0.00, "gnice": 0.00, "idle": 85.43},
+						{"cpu": "2", "usr": 7.96, "nice": 0.00, "sys": 3.93, "iowait": 0.91, "steal": 0.00, "irq": 1.11, "soft": 0.60, "guest": 0.00, "gnice": 0.00, "idle": 85.50},
+						{"cpu": "3", "usr": 7.27, "nice": 0.00, "sys": 4.75, "iowait": 0.51, "steal": 0.00, "irq": 1.41, "soft": 1.41, "guest": 0.00, "gnice": 0.00, "idle": 84.65}
+					],
+					"process-and-context-switch": {"proc": 33.87, "cswch": 20118.48},
+					"swap-pages": {"pswpin": 0.00, "pswpout": 0.00},
+					"paging": {"pgpgin": 0.00, "pgpgout": 384.12, "fault": 7580.32, "majflt": 0.00, "pgfree": 10954.15, "pgscank": 0.00, "pgscand": 0.00, "pgsteal": 0.00, "vmeff-percent": 0.00},
+					"io": {"tps": 41.56, "io-reads": {"rtps": 0.00, "bread": 0.00}, "io-writes": {"wtps": 41.56, "bwrtn": 768.33}, "io-discard": {"dtps": 0.00, "bdscd": 0.00}},
+					"memory": {"memfree": 6679328, "avail": 17005388, "memused": 6841136, "memused-percent": 27.73, "buffers": 1076, "cached": 10533500, "commit": 14153540, "commit-percent": 57.38, "active": 589664, "inactive": 16452856, "dirty": 1504, "anonpg": 4907356, "slab": 611840, "kstack": 15312, "pgtbl": 35584, "vmused": 0, "swpfree": 0, "swpused": 0, "swpused-percent": 0.00, "swpcad": 0, "swpcad-percent": 0.00},
+					"hugepages": {"hugfree": 0, "hugused": 0, "hugused-percent": 0.00, "hugrsvd": 0, "hugsurp": 0},
+					"kernel": {"dentunusd": 202300, "file-nr": 6048, "inode-nr": 195396, "pty-nr": 0},
+					"queue": {"runq-sz": 0, "plist-sz": 954, "ldavg-1": 1.35, "ldavg-5": 1.00, "ldavg-15": 0.91, "blocked": 0},
+					"serial": [
+						{"line": 0, "rcvin": 0.00, "xmtin": 0.00, "framerr": 0.00, "prtyerr": 0.00, "brk": 0.00, "ovrun": 0.00}
+					],
+					"disk": [
+						{"disk-device": "vda", "tps": 41.56, "rd_sec": 0.00, "wr_sec": 768.33, "dc_sec": 0.00, "rkB": 0.00, "wkB": 384.17, "dkB": 0.00, "avgrq-sz": 18.49, "areq-sz": 9.24, "avgqu-sz": 0.04, "aqu-sz": 0.04, "await": 1.00, "util-percent": 4.45},
+						{"disk-device": "sr0", "tps": 0.00, "rd_sec": 0.00, "wr_sec": 0.00, "dc_sec": 0.00, "rkB": 0.00, "wkB": 0.00, "dkB": 0.00, "avgrq-sz": 0.00, "areq-sz": 0.00, "avgqu-sz": 0.00, "aqu-sz": 0.00, "await": 0.00, "util-percent": 0.00}
+					],
+					"network": {
+						"net-dev": [
+							{"iface": "vethc43ef5a1", "rxpck": 15.38, "txpck": 15.08, "rxkB": 2.55, "txkB": 2.10, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "ovs-system", "rxpck": 0.00, "txpck": 0.00, "rxkB": 0.00, "txkB": 0.00, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth25ac4d77", "rxpck": 0.30, "txpck": 0.30, "rxkB": 0.02, "txkB": 0.02, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "vethdc847798", "rxpck": 0.50, "txpck": 0.50, "rxkB": 0.03, "txkB": 0.09, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "tun0", "rxpck": 48.65, "txpck": 48.35, "rxkB": 8.26, "txkB": 10.15, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "vxlan_sys_4789", "rxpck": 23.98, "txpck": 17.58, "rxkB": 3.20, "txkB": 9.96, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth4eaaa653", "rxpck": 2.40, "txpck": 3.20, "rxkB": 1.04, "txkB": 2.13, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth6bc1fc67", "rxpck": 4.00, "txpck": 4.60, "rxkB": 1.51, "txkB": 1.62, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "vethf5f75ba5", "rxpck": 2.90, "txpck": 3.30, "rxkB": 1.52, "txkB": 0.54, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth68af4193", "rxpck": 25.27, "txpck": 26.27, "rxkB": 9.14, "txkB": 3.98, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "vethbfaafe62", "rxpck": 0.50, "txpck": 0.90, "rxkB": 0.03, "txkB": 0.06, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "br0", "rxpck": 0.00, "txpck": 0.00, "rxkB": 0.00, "txkB": 0.00, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "vethb2364cfe", "rxpck": 1.00, "txpck": 1.00, "rxkB": 0.14, "txkB": 0.09, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth3e633a4f", "rxpck": 0.50, "txpck": 0.70, "rxkB": 0.24, "txkB": 0.36, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth3cdacabf", "rxpck": 1.00, "txpck": 1.00, "rxkB": 0.10, "txkB": 0.09, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "vethd0019ea6", "rxpck": 7.39, "txpck": 9.99, "rxkB": 1.51, "txkB": 0.73, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth9300bca0", "rxpck": 0.40, "txpck": 0.60, "rxkB": 0.05, "txkB": 0.05, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "lo", "rxpck": 433.07, "txpck": 433.07, "rxkB": 233.09, "txkB": 233.09, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth6bd46351", "rxpck": 0.40, "txpck": 0.40, "rxkB": 0.03, "txkB": 0.03, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth11dafa0f", "rxpck": 0.40, "txpck": 0.40, "rxkB": 0.03, "txkB": 0.03, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "ens3", "rxpck": 709.69, "txpck": 704.90, "rxkB": 323.77, "txkB": 340.42, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00},
+							{"iface": "veth49557dc0", "rxpck": 2.00, "txpck": 2.20, "rxkB": 0.70, "txkB": 1.26, "rxcmp": 0.00, "txcmp": 0.00, "rxmcst": 0.00, "ifutil-percent": 0.00}
+						],
+						"net-edev": [
+							{"iface": "vethc43ef5a1", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "ovs-system", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth25ac4d77", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "vethdc847798", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "tun0", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "vxlan_sys_4789", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth4eaaa653", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth6bc1fc67", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "vethf5f75ba5", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth68af4193", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "vethbfaafe62", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "br0", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "vethb2364cfe", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth3e633a4f", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth3cdacabf", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "vethd0019ea6", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth9300bca0", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "lo", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth6bd46351", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth11dafa0f", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "ens3", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00},
+							{"iface": "veth49557dc0", "rxerr": 0.00, "txerr": 0.00, "coll": 0.00, "rxdrop": 0.00, "txdrop": 0.00, "txcarr": 0.00, "rxfram": 0.00, "rxfifo": 0.00, "txfifo": 0.00}
+						],
+						"net-nfs": {"call": 0.80, "retrans": 0.00, "read": 0.10, "write": 0.00, "access": 0.00, "getatt": 0.20},
+						"net-nfsd": {"scall": 0.00, "badcall": 0.00, "packet": 0.00, "udp": 0.00, "tcp": 0.00, "hit": 0.00, "miss": 0.00, "sread": 0.00, "swrite": 0.00, "saccess": 0.00, "sgetatt": 0.00},
+						"net-sock": {"totsck": 1943, "tcpsck": 548, "udpsck": 6, "rawsck": 0, "ip-frag": 0, "tcp-tw": 39},
+						"softnet": [
+							{"cpu": "all", "total": 1368.63, "dropd": 0.00, "squeezd": 0.00, "rx_rps": 0.00, "flw_lim": 0.00},
+							{"cpu": "0", "total": 124.18, "dropd": 0.00, "squeezd": 0.00, "rx_rps": 0.00, "flw_lim": 0.00},
+							{"cpu": "1", "total": 146.35, "dropd": 0.00, "squeezd": 0.00, "rx_rps": 0.00, "flw_lim": 0.00},
+							{"cpu": "2", "total": 154.65, "dropd": 0.00, "squeezd": 0.00, "rx_rps": 0.00, "flw_lim": 0.00},
+							{"cpu": "3", "total": 943.46, "dropd": 0.00, "squeezd": 0.00, "rx_rps": 0.00, "flw_lim": 0.00}
+						]
+					}
+				}
+			],
+			"restarts": [
+			]
+		}
+	]
+}}

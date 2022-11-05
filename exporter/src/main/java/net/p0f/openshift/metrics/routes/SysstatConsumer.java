@@ -1,17 +1,23 @@
 package net.p0f.openshift.metrics.routes;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import net.p0f.openshift.metrics.exporter.SysstatMetrics;
 import net.p0f.openshift.metrics.model.SysstatMeasurement;
 
+@ApplicationScoped
 public class SysstatConsumer extends RouteBuilder {
+    @ConfigProperty(defaultValue = "/metrics", name = "exporter.data.path")
+    String dataPath;
 
     @Override
     public void configure() throws Exception {
-        from("file:/metrics?" +
+        from("file:" + dataPath + "?" +
                 "fileName=sysstat-dump.json&" +
                 "readLock=changed&" +
                 "readLockCheckInterval=250&" +
@@ -38,6 +44,7 @@ public class SysstatConsumer extends RouteBuilder {
             .unmarshal(new JacksonDataFormat(SysstatMeasurement.class))
             .log(LoggingLevel.INFO, "Unmarshaled Sysstat: ${body}")
             .setHeader("X-Is-Record-Valid", method(SysstatMetrics.class, "isRecordValid"))
+            .log(LoggingLevel.DEBUG, "Validity check: ${header.X-Is-Record-Valid}")
             .choice()
                 .when(header("X-Is-Record-Valid").isEqualTo(false))
                     .log(LoggingLevel.WARN, "Illegal record: ${body}")

@@ -1,6 +1,7 @@
 package net.p0f.openshift.metrics.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -465,6 +466,11 @@ public class SysstatMeasurement implements Serializable {
         IoWrites ioWrites;
         @JsonProperty("io-discard")
         IoDiscard ioDiscard;
+        public Io() {
+            this.ioReads = new IoReads();
+            this.ioWrites = new IoWrites();
+            this.ioDiscard = new IoDiscard();
+        }
         public float getTps() {
             return tps;
         }
@@ -1069,6 +1075,14 @@ public class SysstatMeasurement implements Serializable {
         NetSock netSock;
         @JsonProperty
         List<Softnet> softnet;
+        public Network() {
+            this.netDev = new ArrayList<>();
+            this.netEDev = new ArrayList<>();
+            this.netNfs = new NetNfs();
+            this.netNfsd = new NetNfsd();
+            this.netSock = new NetSock();
+            this.softnet = new ArrayList<>();
+        }
         public List<NetDev> getNetDev() {
             return netDev;
         }
@@ -1647,6 +1661,11 @@ public class SysstatMeasurement implements Serializable {
         PsiIoAndMem psiIo;
         @JsonProperty("psi-mem")
         PsiIoAndMem psiMem;
+        public Psi() {
+            this.psiCpu = new PsiCpu();
+            this.psiIo = new PsiIoAndMem();
+            this.psiMem = new PsiIoAndMem();
+        }
         public PsiCpu getPsiCpu() {
             return psiCpu;
         }

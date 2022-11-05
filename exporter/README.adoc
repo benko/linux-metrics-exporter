@@ -1,3 +1,6 @@
 = metrics-exporter Project =
 
-TBD
+Configurable property:
+
+ - `exporter.data.path`: where to read incoming data from
+ 
