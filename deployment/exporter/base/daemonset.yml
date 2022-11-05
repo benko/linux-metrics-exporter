@@ -5,8 +5,9 @@ metadata:
   namespace: exporter
   labels:
     app: metrics
-  annotations:
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"collector-sysstat:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-sysstat\")].image"},{"from":{"kind":"ImageStreamTag","name":"collector-psacct:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-psacct\")].image"},{"from":{"kind":"ImageStreamTag","name":"metrics-exporter:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"metrics-exporter\")].image"}]'
+  # Apparently ICT don't work on daemonsets, although docs say they should.
+  #annotations:
+  #  image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"collector-sysstat:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-sysstat\")].image"},{"from":{"kind":"ImageStreamTag","name":"collector-psacct:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-psacct\")].image"},{"from":{"kind":"ImageStreamTag","name":"metrics-exporter:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"metrics-exporter\")].image"}]'
 spec:
   minReadySeconds: 15
   selector:
@@ -29,7 +30,7 @@ spec:
     spec:
       containers:
         - name: collector-sysstat
-          image: " "
+          image: quay.io/benko/ocp-collector-sysstat:latest
           env:
             - name: PERIOD
               value: "15"
@@ -56,7 +57,7 @@ spec:
               mountPath: /var/log/sa
               readOnly: false
         - name: collector-psacct
-          image: " "
+          image: quay.io/benko/ocp-collector-psacct:latest
           env:
             - name: PERIOD
               value: "15"
@@ -84,7 +85,7 @@ spec:
               mountPath: /var/account
               readOnly: false
         - name: metrics-exporter
-          image: " "
+          image: quay.io/benko/ocp-metrics-exporter:latest
           env:
             - name: HOSTNAME_FROM_API
               value: "true"
