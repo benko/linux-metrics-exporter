@@ -28,7 +28,7 @@ Start the composition.
 
 // TODO: podman pod
 
-[subs+=quotes]
+[subs=+quotes]
 ------
 $ *podman volume create metrics*
 metrics
@@ -46,7 +46,7 @@ d4840ad57bfffd4b069e7c2357721ff7aaa6b6ee77f90ad4866a76a1ceb6adb7
 
 Add prometheus and grafana.
 
-[subs+=quotes]
+[subs=+quotes]
 ------
 $ *podman run --name prometheus \*
 		*-d --rm \*
