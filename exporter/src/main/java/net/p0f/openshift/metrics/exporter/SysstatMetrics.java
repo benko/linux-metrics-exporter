@@ -21,24 +21,58 @@ public class SysstatMetrics {
 
     SysstatMeasurement lastMeasurement = null;
 
-    public void processMetricRecord(SysstatMeasurement sm) {
-        // Sanity check first.
-        if (sm.getCpuLoad() == null ||
-                sm.getDisk() == null ||
-                sm.getHugepages() == null ||
-                sm.getIo() == null ||
-                sm.getKernel() == null ||
-                sm.getMemory() == null ||
-                sm.getNetwork() == null ||
-                sm.getPaging() == null ||
-                sm.getProcessAndContextSwitch() == null ||
-                sm.getPsi() == null ||
-                sm.getQueue() == null ||
-                sm.getSwapPages() == null) {
-            LOG.severe("Some of the sysstat measurement fields are null. Rejecting record.");
-            throw new IllegalStateException("Some of the sysstat measurement fields are null. Rejecting record.");
+    public boolean isRecordValid(SysstatMeasurement sm) {
+        String nullMetrics = "";
+
+        if (sm.getCpuLoad() == null) {
+            nullMetrics += "CpuLoad, ";
+        }
+        if (sm.getDisk() == null) {
+            nullMetrics += "Disk, ";
+        }
+        if (sm.getHugepages() == null) {
+            nullMetrics += "Hugepages, ";
+        }
+        if (sm.getIo() == null) {
+            nullMetrics += "Io, ";
+        }
+        if (sm.getKernel() == null) {
+            nullMetrics += "Kernel, ";
+        }
+        if (sm.getMemory() == null) {
+            nullMetrics += "Memory, ";
+        }
+        if (sm.getNetwork() == null) {
+            nullMetrics += "Network, ";
+        }
+        if (sm.getPaging() == null) {
+            nullMetrics += "Paging, ";
+        }
+        if (sm.getProcessAndContextSwitch() == null) {
+            nullMetrics += "ProcessAndContextSwitch, ";
+        }
+        if (sm.getPsi() == null) {
+            nullMetrics += "Psi, ";
+        }
+        if (sm.getQueue() == null) {
+            nullMetrics += "Queue, ";
+        }
+        if (sm.getSwapPages() == null) {
+            nullMetrics += "SwapPages, ";
         }
 
+        nullMetrics.replaceAll(", $", "");
+
+        if (nullMetrics.length() != 0) {
+            LOG.severe("Null sysstat fields, rejecting record: " + nullMetrics);
+            // throw new IllegalStateException("Null sysstat fields, rejecting record: " + nullMetrics);
+            return false;
+        }
+
+        return true;
+    }
+
+    public void processMetricRecord(SysstatMeasurement sm) {
         LOG.fine("Updating sysstat metrics records...");
 
         if (this.lastMeasurement == null) {

@@ -4,6 +4,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 
+import net.p0f.openshift.metrics.exporter.SysstatMetrics;
 import net.p0f.openshift.metrics.model.SysstatMeasurement;
 
 public class SysstatConsumer extends RouteBuilder {
@@ -36,6 +37,11 @@ public class SysstatConsumer extends RouteBuilder {
             .log(LoggingLevel.DEBUG, "Transformed Sysstat Json: ${body}")
             .unmarshal(new JacksonDataFormat(SysstatMeasurement.class))
             .log(LoggingLevel.INFO, "Unmarshaled Sysstat: ${body}")
-            .to("bean:sysstatMetrics?method=processMetricRecord&scope=Request");
+            .choice()
+                .when(method(SysstatMetrics.class, "isRecordValid").not())
+                    .log(LoggingLevel.WARN, "Illegal record: ${body}")
+                .otherwise()
+                    .to("bean:sysstatMetrics?method=processMetricRecord&scope=Request")
+            .endChoice();
     }
 }
