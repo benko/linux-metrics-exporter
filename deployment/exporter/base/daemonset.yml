@@ -91,7 +91,8 @@ spec:
           ports:
             - name: http
               protocol: TCP
-              containerPort: 8080
+              # Must be the same as hostPort with hostNetwork==true.
+              containerPort: 28080
               # Need some host port because hostNetwork==true.
               hostPort: 28080
           #livenessProbe: {}
