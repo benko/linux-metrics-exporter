@@ -16,6 +16,9 @@ endif::[]
 :toc:
 :toclevels: 4
 :toc-placement!:
+
+A composite pod that can be run in a `DaemonSet` and exposes standard Linux system activity data collector (`sadc`) and process accounting (`psacct`) data as scrapable Prometheus metrics.
+
 toc::[]
 
 == Components ==
@@ -40,7 +43,7 @@ the way in order to keep the disk space utilisation as low as possible.
 
 === Defaults ===
 
-The easiest? Just use `Kustomize` to deploy existing resource definitions from
+The easiest? Just use Kustomize to deploy existing resource definitions from
 the `exporter` manifest in `deployment/`:
 
 [subs=+quotes]
@@ -136,7 +139,7 @@ d4840ad57bfffd4b069e7c2357721ff7aaa6b6ee77f90ad4866a76a1ceb6adb7
 
 ------
 
-Configure prometheus with a data source from the `exporter` container.
+Configure Prometheus with a data source from the `exporter` container.
 
 [subs=+quotes]
 ------
@@ -161,7 +164,7 @@ scrape_configs:
 
 ------
 
-Add prometheus and grafana.
+Add Prometheus and Grafana.
 
 [subs=+quotes]
 ------
@@ -179,7 +182,7 @@ $ *podman run --name grafana -d --rm -p 3000:3000 \*
 78d5bfa7977923b828c1818bb877fa87bdd96086cc8c875fbc46073489f6760e
 ------
 
-Configure grafana with prometheus as the datasource and dashboard away!
+Configure Grafana with Prometheus as the datasource and dashboard away!
 
 .Process Accounting Graphs from a Single Host
 image::pics/psacct-sample.png[scaledwidth="95%" width="95%"]
