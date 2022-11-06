@@ -22,7 +22,7 @@ the way in order to keep the disk space utilisation as low as possible.
 
 TBD
 
-== Standalone ==
+== Standalone Containers ==
 
 Start the composition.
 
@@ -44,6 +44,31 @@ d4840ad57bfffd4b069e7c2357721ff7aaa6b6ee77f90ad4866a76a1ceb6adb7
 
 ------
 
+Configure prometheus with a data source from the `exporter` container.
+
+[subs=+quotes]
+------
+$ *podman inspect -f '{{.NetworkSettings.IPAddress}}' exporter
+10.88.0.8
+
+$ *tail -n15 tmp-test/prometheus.yml*
+
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  **- job_name: "exporter"
+    metrics_path: "/q/metrics"
+    scheme: "http"
+    static_configs:
+      - targets: ["10.88.0.8:8080"]
+    scrape_interval: 10s
+    scrape_timeout: 5s**
+
+------
+
 Add prometheus and grafana.
 
 [subs=+quotes]
@@ -62,17 +87,29 @@ $ *podman run --name grafana -d --rm -p 3000:3000 \*
 78d5bfa7977923b828c1818bb877fa87bdd96086cc8c875fbc46073489f6760e
 ------
 
+Configure grafana with prometheus as the datasource and dashboard away!
+
+.Process Accounting Graphs from a Single Host
+image::pics/psacct-sample.png[scaledwidth="95%" width="95%"]
+
+.Sysstat Scheduler Information, Single Host
+image::pics/sysstat-sample-sched.png[scaledwidth="95%" width="95%"]
+
+.Sysstat I/O Information, Single Host
+image::pics/sysstat-sample-io.png[scaledwidth="95%" width="95%"]
+
 == Images ==
 
 This set of images requires a valid entitlement for RHEL (and consequently
 either a RHEL system to build on or a RHEL system to create an entitlement
 secret from).
 
-IMPORTANT: You do not have to build the images, they are already provided by the `is-readymade.yml` resource.
+IMPORTANT: You do not have to build the images, I have built them for `x86_64` and made them available on `quay.io/benko/`.
 
 === SAR ===
 
-The _system activity reporting_ image is based on `ubi-minimal` and includes just the `sysstat` package.
+The _system activity reporting_ image is based on `ubi-minimal` and includes
+just the `sysstat` package.
 
 It expects a volume to be attached at `/var/log/sa`.
 
@@ -80,9 +117,11 @@ Entrypoint takes care of initialising the `saXX` files.
 
 // TODO: and rotating any old files out of the way.
 
-It *requires* to be executed under `root` UID (can be rootless, but that may affect your data depending on host and container configuration).
+It *requires* to be executed under `root` UID (can be rootless, but that may
+affect your data depending on host and container configuration).
 
-It also *requires* access to host's network namespace if you want to measure global network statistics.
+It also *requires* access to host's network namespace if you want to measure
+global network statistics.
 
 // NOTE: When running in a pod, the below is irrelevant as the exporter sets
 //	    the hostname, and you can override it there. It does however obtain
@@ -94,17 +133,32 @@ It also *requires* access to host's network namespace if you want to measure glo
 
 ==== Parameters ====
 
-TBD
+`PERIOD`::
+    Sampling period in seconds. Defaults to `10`. Increase this to something
+    like `30` (or more) for hosts with many network interfaces, block devices,
+    and/or CPUs.
+
+`STARTUP_SCRATCH`::
+    Whether to scratch existing `sa1` data at startup. Defaults to `0`, but
+    could be anything except `1`, `yes`, or `true`, which activates it.
+    
+`STARTUP_ROTATE`::
+    Whether to mark data as rotated at startup. Basically just writes a marker
+    in the previous `sadc` data file. Defaults to `0`, but could be anything
+    except `1`, `yes`, or `true`, which activates it.
 
 === PSACCT ===
 
-The _process accounting_ image is based on `ubi-minimal` and includes just the `psacct` package.
+The _process accounting_ image is based on `ubi-minimal` and includes just the
+`psacct` package.
 
 It expects a volume to be attached at `/var/account`.
 
 Entrypoint takes care of rotating any old `pacct` files out of the way.
 
-In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a rootless container), it also *requires* the `CAP_SYS_PACCT` capability (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host`).
+In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a
+rootless container), it also *requires* the `CAP_SYS_PACCT` capability
+(`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host`).
 
 // NOTE: When running in a pod, the below is irrelevant as the exporter sets
 //	    the hostname, and you can override it there. It does however obtain
@@ -116,11 +170,23 @@ In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a roo
 
 ==== Parameters ====
 
-TBD
+`PERIOD`::
+    Sampling period in seconds. Defaults to `10`. Increase this to something
+    like `30` (or more) for hosts with many network interfaces, block devices,
+    and/or CPUs.
+
+`CUMULATIVE`::
+    Tells the collection process to never reset the `pacct` file and just keep
+    it growing, thus reporting cumulative stats since container start. Beware
+    that the `pacct` file will grow correspondinly large as time goes by.
+
+`STARTUP_SCRATCH`::
+    Whether to scratch existing `pacct` data at startup. Defaults to `0`, but
+    could be anything except `1`, `yes`, or `true`, which activates it.
 
 === Exporter ===
 
-TBD
+The brain of the group.
 
 // TODO: Add support for hostname overrides in app.
 
@@ -141,7 +207,44 @@ TBD
 
 ==== Parameters ====
 
-TBD
+In `application.properties` or as Java system properties:
+
+`exporter.data.path`::
+    Override the location where the metrics files are expected to show up.
+    Defaults to `/metrics` but obviously can't be that for testing outside of a
+    container.
+
+==== Debugging ====
+
+There are a couple of logger categories that might help you see what's going on.
+
+By default, the routes are fairly noisy, as apparently `TRACE` level logging
+doesn't work for some reason, so I had to bump everything up a level, so at
+`INFO` you already see a note about every record that's been processed - you
+will see their unmarshaled bodies (completely shameless, I know).
+
+These can be bumped up to `DEBUG` if you need more info:
+
+`psacct-reader`::
+    The route reading process accounting files from `psacct-dump-all` file.
+    Pretty much all the logic is here, but since there can be a large number of
+    process records in the file it is split and each record is processed
+    asynchronously by the dispatch route.
+
+`psacct-dispatch`::
+    The route dispatching the records to the registration service.
+
+`psacct-reset`::
+    To be able to work with instantaneous data, rather than cumulative, all
+    previously registered records are synchronously reset to zero upon the
+    arrival of a new snapshot. This prevents metrics for previously registered
+    processes from disappearing.
+
+`sysstat-reader`::
+    The route that reads `sysstat-dump.json` file. All the logic is here.
+
+`net.p0f.openshift.metrics`::
+    Non-camel stuff is all logged in this category.
 
 === Building with Podman ===
 
@@ -157,7 +260,19 @@ base image by using the `--from` option in `podman build`.
 $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
 -------------------------------
 
+You will have noticed there is no `Containerfile` for exporter. That is because
+`quarkus-maven-plugin` can do just fine
+https://quarkus.io/guides/container-image[building an image on its own]. Just
+add the `jib` extension and tell it to push the image somewhere.
+
+[subs=+quotes]
+-------------------------------
+$ *mvn package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=foo*
+-------------------------------
+
 === Building in OpenShift ===
+
+==== Collector Images ====
 
 If building the images in OpenShift Container Platform, you must make sure an
 entitlement secret and corresponding RHSM certificate secret are mounted inside
@@ -228,4 +343,72 @@ entitled host or inside a correctly configured OpenShift builder pod.
 NOTE: Key thing in `Containerfile` steps is to remove `/etc/rhsm-host` at some
       point unless `/etc/pki/entitlement-host` contains something (such as for
       example, valid entitlemets). Both are symlinks to `/run/secrets`.
+
+==== Exporter Image ====
+
+===== Java Build =====
+
+Java build is relatively simple.
+
+Figure out what OpenJDK image is available in the cluster and create a new build.
+
+[subs=+quotes]
+-------------------------------
+$ *oc new-build openjdk-11-rhel8:1.0~https://github.com/benko/linux-metrics-exporter.git --context-dir=exporter*
+-------------------------------
+
+Wait for the build to complete (it's going to take quite some time to download all deps) and that's it!
+
+If you're experimenting with the code, don't forget to mark the build as incremental.
+
+[subs=+quotes]
+-------------------------------
+$ *oc patch bc/linux-metrics-exporter -p '{"spec": {"strategy": {"sourceStrategy": {"incremental": true}}}}'*
+-------------------------------
+
+===== Native Build =====
+
+TBD
+
+// For the native build, you need a specific Mandrel image. Import it first.
+// 
+// $ oc import-image mandrel --from=registry.redhat.io/quarkus/mandrel-21-rhel8:latest --confirm
+// imagestream.image.openshift.io/mandrel imported
+// ...
+
+===== Publishing Image =====
+
+Make sure the internal OpenShift image registry is exposed if you want to copy the image somewhere else.
+
+[subs=+quotes]
+-------------------------------
+$ *oc patch config.imageregistry/cluster --type=merge -p '{"spec": {"defaultRoute": true}}'*
+-------------------------------
+
+Login to both source and target registries.
+
+[subs=+quotes]
+-------------------------------
+$ *podman login quay.io*
+Username: *youruser*
+Password: *yourpassword*
+Login Succeeded!
+
+$ *oc whoami -t*
+sha256~8tIizkcLNroDEcWXJgoPMsVYUriK1sGnJ6N94WSveEU
+
+$ podman login default-route-openshift-image-registry.apps.your.openshift.cluster
+Username: _this-is-irrelevant_
+Password: *token-pasted-here*
+Login Succeeded!
+-------------------------------
+
+Then simply copy the image using `skopeo`.
+
+[subs=+quotes]
+-------------------------------
+$ *skopeo copy \*
+    *docker://default-route-openshift-image-registry.apps.your.openshift.cluster/project/linux-metrics-exporter:latest \*
+    *docker://quay.io/youruser/yourimage:latest*
+-------------------------------
 
