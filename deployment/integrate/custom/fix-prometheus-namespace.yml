@@ -1,0 +1,11 @@
+apiVersion: builtin
+kind: PatchJson6902Transformer
+metadata:
+  name: fix-namespace-of-prometheus-serviceaccount
+target:
+  group: rbac.authorization.k8s.io
+  version: v1
+  kind: RoleBinding
+  name: prometheus-scrape
+# Set the project in this file ("value:") to wherever your Prometheus is.
+path: fix-prometheus-namespace.json

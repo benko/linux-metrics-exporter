@@ -4,4 +4,4 @@ resources:
   - ../base/
 transformers:
   - use-custom-namespace.yml
-  - fix-podmonitor-namespace.yml
+  - fix-prometheus-namespace.yml
