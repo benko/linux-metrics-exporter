@@ -4,6 +4,8 @@ Grega Bremec <gregab-at-p0f-dot-net>
 :revnumber: 1.0
 :revdate: 6th November 2022
 
+:experimental:
+
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -512,5 +514,5 @@ $ *skopeo copy \*
 
 == Acknowledgements ==
 
-Thanks to https://github.com/divinitus/[Piotr Baranowski] for the idea about running `sa1` in a DaemonSet.
+Many thanks to Piotr Baranowski <https://github.com/divinitus[@divinitus]> for the idea about running `sa1` in a DaemonSet.
 
