@@ -1,3 +1,5 @@
+# Rot. ICT don't work with DaemonSets.
+# This file is useless now. Foo.
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:

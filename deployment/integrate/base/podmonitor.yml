@@ -3,6 +3,8 @@ kind: PodMonitor
 metadata:
   name: exporter-monitor
   namespace: prometheus
+  labels:
+    app: metrics-exporter
 spec:
   namespaceSelector:
     matchNames:

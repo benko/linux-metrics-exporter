@@ -4,7 +4,7 @@ metadata:
   name: metrics
   namespace: exporter
   labels:
-    app: metrics
+    app: metrics-exporter
   # Apparently ICT don't work on daemonsets, although docs say they should.
   #annotations:
   #  image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"collector-sysstat:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-sysstat\")].image"},{"from":{"kind":"ImageStreamTag","name":"collector-psacct:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"collector-psacct\")].image"},{"from":{"kind":"ImageStreamTag","name":"metrics-exporter:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"metrics-exporter\")].image"}]'
@@ -12,7 +12,7 @@ spec:
   minReadySeconds: 15
   selector:
     matchLabels:
-      app: metrics
+      app: metrics-exporter
       type: daemonset
       project: exporter
   updateStrategy:
@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        app: metrics
+        app: metrics-exporter
         type: daemonset
         project: exporter
     spec:

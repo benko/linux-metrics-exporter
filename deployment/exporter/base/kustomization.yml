@@ -4,8 +4,6 @@ resources:
   - namespace.yml
   - serviceaccount.yml
   - privileged-clusterrolebinding.yml
-  - prometheus-role.yml
-  - prometheus-rolebinding.yml
   - daemonset.yml
 # Rot. ICT don't work with DaemonSets.
 #  - is-collector-sysstat.yml

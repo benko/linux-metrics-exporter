@@ -3,13 +3,13 @@ kind: Role
 metadata:
   name: prometheus-scrape
   namespace: exporter
+  labels:
+    app: metrics-exporter
 rules:
 - apiGroups:
   - ""
   resources:
   - pods
-  - services
-  - endpoints
   verbs:
   - get
   - list
