@@ -16,7 +16,7 @@ endif::[]
 
 :status:
 :toc: macro
-:toclevels: 3
+:toclevels: 1
 :!toc-title:
 :toc-placement!:
 
