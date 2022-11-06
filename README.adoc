@@ -20,7 +20,46 @@ the way in order to keep the disk space utilisation as low as possible.
 
 == OpenShift Deployment ==
 
+The easiest? Just use `Kustomize` to deploy existing resource definitions from
+the `exporter` manifest in `deployment/`:
+
+[subs=+quotes]
+------
+$ *oc apply -k ./deployment/exporter/base/*
+------
+
+The above will create everything in the `exporter` project. If you need to
+change that, or some other settings, feel free to have a look at the `custom`
+kustomization next to `base`, then apply it instead of the base set of
+resources.
+
+[subs=+quotes]
+------
+$ *cat deployment/exporter/custom/use-custom-namespace.yml*
+apiVersion: builtin
+kind: NamespaceTransformer
+metadata:
+  namespace: *my-very-own-namespace*
+setRoleBindingSubjects: allServiceAccounts
+fieldSpecs:
+  - path: metadata/name
+    kind: Namespace
+
+$ *oc apply -k ./deployment/exporter/custom/*
+------
+
+You should have Prometheus deployed somewhere prior to that though, so you
+might want to have a look at least at the kustomizations for the `integrate`
+manifest in order to target the right places.
+
 TBD
+
+If you still need to deploy Prometheus, there is a sample manifest in there as
+well. Two, actually. One to deploy the Prometheus and Grafana operators (you
+won't believe it, it's called `operators`), and once those are running, you can
+use the other one (called very innovatively `prometheus`) to deploy their
+actual instances. That, will also target the `prometheus` OpenShift project, so
+kustomize away if that's not what you want.
 
 == Standalone Containers ==
 
