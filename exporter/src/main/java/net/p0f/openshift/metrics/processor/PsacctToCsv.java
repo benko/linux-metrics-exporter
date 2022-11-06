@@ -11,6 +11,7 @@ public class PsacctToCsv implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
+        // TODO: replace any spaces in process names with something
         exchange.getMessage().setBody(
             exchange.getIn().getBody(String.class)
                     .replaceAll(" +", ",")
