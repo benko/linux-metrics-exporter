@@ -1,0 +1,14 @@
+apiVersion: builtin
+kind: PatchJson6902Transformer
+metadata:
+  name: fix-namespace-of-the-podmonitor-resource
+target:
+  group: monitoring.coreos.com
+  version: v1
+  kind: PodMonitor
+  name: exporter-monitor
+patch: |-
+  - op: replace
+    path: /metadata/namespace
+    # Set this to wherever your prometheus is.
+    value: your-prometheus-namespace

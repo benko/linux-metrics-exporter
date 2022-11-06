@@ -3,9 +3,6 @@ kind: NamespaceTransformer
 metadata:
   name: will-change-the-namespace-names-everywhere
   # Set this to wherever you want to deploy everything.
-  # The namespace will be created if it does not exist.
+  # The namespace will NOT be created when you apply this.
   namespace: my-very-own-namespace
-setRoleBindingSubjects: allServiceAccounts
-fieldSpecs:
-  - path: metadata/name
-    kind: Namespace
+setRoleBindingSubjects: none
