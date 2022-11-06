@@ -7,6 +7,13 @@ Grega Bremec <gregab-at-p0f-dot-net>
 :experimental:
 
 ifdef::env-github[]
+:status:
+:toc: macro
+:toclevels: 1
+:toc-title!:
+:!toc-title:
+:toc-placement!:
+:!toc-placement:
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
@@ -14,15 +21,9 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-:status:
-:toc: macro
-:toclevels: 1
-:!toc-title:
-:toc-placement!:
-
 A composite pod that can be run in a `DaemonSet` and exposes standard Linux system activity data collector (`sadc`) and process accounting (`psacct`) data as scrapable Prometheus metrics.
 
-toc::[Table of Contents]
+toc::[]
 
 == Components ==
 
