@@ -5,10 +5,6 @@
 :revnumber: 1.0
 :revdate: 6th November 2022
 
-:toc:
-:toc-placement!:
-toc::[]
-
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -16,6 +12,11 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
+
+:toc:
+:toclevels: 4
+:toc-placement!:
+toc::[]
 
 == Components ==
 
@@ -37,6 +38,8 @@ the way in order to keep the disk space utilisation as low as possible.
 
 == OpenShift Deployment ==
 
+=== Defaults ===
+
 The easiest? Just use `Kustomize` to deploy existing resource definitions from
 the `exporter` manifest in `deployment/`:
 
@@ -45,10 +48,22 @@ the `exporter` manifest in `deployment/`:
 $ *oc apply -k ./deployment/exporter/base/*
 ------
 
-The above will create everything in the `exporter` project. If you need to
-change that, or some other settings, feel free to have a look at the `custom`
-kustomization next to `base`, then apply it instead of the base set of
-resources.
+The above will create everything in the `exporter` project. See below for
+kustomizations.
+
+To integrate the application with Prometheus in the `prometheus` project, just
+use the `integrate` manifest as it is:
+
+[subs=+quotes]
+------
+$ *oc apply -k ./deployment/integrate/base/*
+------
+
+=== Kustomizations ===
+
+If you need to change the names of namespaces or some other settings, feel free
+to have a look at the `custom` kustomization next to `base`, then apply it
+instead of the base set of resources.
 
 [subs=+quotes]
 ------
@@ -65,11 +80,32 @@ fieldSpecs:
 $ *oc apply -k ./deployment/exporter/custom/*
 ------
 
-You should have Prometheus deployed somewhere prior to that though, so you
-might want to have a look at least at the kustomizations for the `integrate`
-manifest in order to target the right places.
+You will probably already have Prometheus deployed somewhere prior to deploying
+the exporter, so you might also want to have a look at the kustomizations for
+the `integrate` manifest in order to target the right places.
 
-TBD
+That one is a bit more complicated as a single manifest targets multiple
+namespaces. So a `NamespaceTransformer` is used for the `Role` and
+`RoleBinding` in the exporter project, and then two patches are used for the
+the `ServiceAccount` namespace in the `RoleBinding` (giving the right
+`prometheus-k8s` service account access to your project), and the `PodMonitor`
+namespace (which will be affected by the initial namespace transformation).
+
+[subs=+quotes]
+------
+$ ls -1 deployment/integrate/custom/
+fix-podmonitor-namespace.json              <1>
+fix-podmonitor-namespace.yml
+fix-prometheus-namespace.json              <2>
+fix-prometheus-namespace.yml
+kustomization.yml
+use-custom-namespace.yml                   <3>
+------
+<1> This is the namespace the `PodMonitor` will be created in.
+<2> This is where the `RoleBinding` target `ServiceAccount` is fixed.
+<3> This is where every other resource will be created.
+
+=== No Prometheus? No Problem. ===
 
 If you still need to deploy Prometheus, there is a sample manifest in there as
 well. Two, actually. One to deploy the Prometheus and Grafana operators (you
