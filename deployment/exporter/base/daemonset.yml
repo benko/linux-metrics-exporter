@@ -42,8 +42,13 @@ spec:
           #   something like /var/log/sa/sysstat-dump.json not being older than ${PERIOD}
           #readinessProbe: {}
           #   /var/log/sa/sysstat-dump.json exists
-          resources: {}
-            # TBD
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: true
             capabilities: {}
@@ -69,8 +74,13 @@ spec:
           #   something like /var/account/psacct-dump-raw not being older than ${PERIOD}
           #readinessProbe: {}
           #   /var/account/psacct-dump-raw exists
-          resources: {}
-            # TBD
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
@@ -100,8 +110,13 @@ spec:
           #   /q/metrics returning 200?
           #readinessProbe: {}
           #   /metrics/version returning 200?
-          resources: {}
-            # TBD
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 250m
+              memory: 512Mi
           # No special privileges for this one.
           securityContext:
             allowPrivilegeEscalation: false
@@ -142,9 +157,9 @@ spec:
       serviceAccountName: exporter
       # Make that somewhere around $PERIOD, but larger.
       terminationGracePeriodSeconds: 15
-      # Need to adjust this whenever there are dedicated control plane or
-      # other tainted nodes.
-      tolerations: []
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
       volumes:
         - name: metrics-shared-volume
           emptyDir: {}
