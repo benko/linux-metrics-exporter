@@ -4,16 +4,10 @@ Grega Bremec <gregab-at-p0f-dot-net>
 :revnumber: 1.0
 :revdate: 6th November 2022
 
-:experimental:
-
 ifdef::env-github[]
 :status:
 :toc: macro
-:toclevels: 1
-:toc-title!:
-:!toc-title:
-:toc-placement!:
-:!toc-placement:
+:toclevels: 3
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
