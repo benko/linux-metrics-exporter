@@ -1,5 +1,12 @@
 = Linux Metrics Exporter for OpenShift Nodes =
 
+:author: Grega Bremec
+:email: gregab-at-p0f-dot-net
+:revnumber: 1.0
+:revdate: 6th November 2022
+
+:toc:
+
 == Components ==
 
 . Container Image for SAR
@@ -87,7 +94,7 @@ Configure prometheus with a data source from the `exporter` container.
 
 [subs=+quotes]
 ------
-$ *podman inspect -f '{{.NetworkSettings.IPAddress}}' exporter
+$ *podman inspect -f '{{.NetworkSettings.IPAddress}}' exporter*
 10.88.0.8
 
 $ *tail -n15 tmp-test/prometheus.yml*
@@ -137,13 +144,14 @@ image::pics/sysstat-sample-sched.png[scaledwidth="95%" width="95%"]
 .Sysstat I/O Information, Single Host
 image::pics/sysstat-sample-io.png[scaledwidth="95%" width="95%"]
 
-== Images ==
+== Container Images ==
 
 This set of images requires a valid entitlement for RHEL (and consequently
 either a RHEL system to build on or a RHEL system to create an entitlement
 secret from).
 
-IMPORTANT: You do not have to build the images, I have built them for `x86_64` and made them available on `quay.io/benko/`.
+IMPORTANT: You do not have to build the images, I have already built them (for
+    `x86_64` architecture only) and made them available on `quay.io/benko/`.
 
 === SAR ===
 
@@ -211,8 +219,7 @@ rootless container), it also *requires* the `CAP_SYS_PACCT` capability
 
 `PERIOD`::
     Sampling period in seconds. Defaults to `10`. Increase this to something
-    like `30` (or more) for hosts with many network interfaces, block devices,
-    and/or CPUs.
+    like `30` (or more) for hosts with many thousands of processes.
 
 `CUMULATIVE`::
     Tells the collection process to never reset the `pacct` file and just keep
@@ -252,6 +259,8 @@ In `application.properties` or as Java system properties:
     Override the location where the metrics files are expected to show up.
     Defaults to `/metrics` but obviously can't be that for testing outside of a
     container.
+
+You can use the same settings https://quarkus.io/guides/config-reference[as environment variables].
 
 ==== Debugging ====
 
