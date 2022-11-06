@@ -5,7 +5,17 @@
 :revnumber: 1.0
 :revdate: 6th November 2022
 
-:toc: preamble
+:toc:
+:toc-placement!:
+toc::[]
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
 
 == Components ==
 
@@ -65,7 +75,7 @@ If you still need to deploy Prometheus, there is a sample manifest in there as
 well. Two, actually. One to deploy the Prometheus and Grafana operators (you
 won't believe it, it's called `operators`), and once those are running, you can
 use the other one (called very innovatively `prometheus`) to deploy their
-actual instances. That, will also target the `prometheus` OpenShift project, so
+actual instances. That will also target the `prometheus` OpenShift project, so
 kustomize away if that's not what you want.
 
 == Standalone Containers ==
@@ -170,14 +180,6 @@ affect your data depending on host and container configuration).
 It also *requires* access to host's network namespace if you want to measure
 global network statistics.
 
-// NOTE: When running in a pod, the below is irrelevant as the exporter sets
-//	    the hostname, and you can override it there. It does however obtain
-//	    the default hostname from data sources.
-//
-// If aggregating from several hosts, you also need to use the hosts' UTS
-// namespace to report correct hostnames, or set the corresponding environment
-// variables to override detection.
-
 ==== Parameters ====
 
 `PERIOD`::
@@ -206,14 +208,6 @@ Entrypoint takes care of rotating any old `pacct` files out of the way.
 In addition to *requiring* execution under a *real* `root` UID (i.e. *NOT* a
 rootless container), it also *requires* the `CAP_SYS_PACCT` capability
 (`--cap-add=SYS_PACCT`) and access to host's PID namespace (`--pid=host`).
-
-// NOTE: When running in a pod, the below is irrelevant as the exporter sets
-//	    the hostname, and you can override it there. It does however obtain
-//	    the default hostname from data sources.
-//
-// If aggregating from several hosts, you also need to use the hosts' UTS
-// namespace to report correct hostnames, or set the corresponding environment
-// variables to override detection.
 
 ==== Parameters ====
 
@@ -260,7 +254,7 @@ In `application.properties` or as Java system properties:
     Defaults to `/metrics` but obviously can't be that for testing outside of a
     container.
 
-You can use the same settings https://quarkus.io/guides/config-reference[as environment variables].
+You can set the same settings https://quarkus.io/guides/config-reference[from environment variables].
 
 ==== Debugging ====
 
@@ -294,19 +288,35 @@ These can be bumped up to `DEBUG` if you need more info:
 `net.p0f.openshift.metrics`::
     Non-camel stuff is all logged in this category.
 
+`net.p0f.openshift.metrics.exporter`::
+    Metric registration and a silly REST endpoint that reports the version.
+
+`net.p0f.openshift.metrics.model`::
+    `ProcessAccountingRecord` and `SysstatMeasurement` live here.
+
+`net.p0f.openshift.metrics.processor`::
+    Just a simple processor that transforms a `psacct` record into CSV.
+
+`net.p0f.openshift.metrics.routes`::
+    Camel routes. See the first four categories for this.
+
 === Building with Podman ===
 
 If building the images using `podman` on an entitled host, no extra steps need
 to be performed as host entitlements will automatically be imported into the
 build container.
 
-NOTE: When building for an architecture without the `ubi-minimal` image or on a
+[NOTE]
+========
+When building for an architecture without the `ubi-minimal` image or on a
 host that can not be entitled (f.e. Fedora CoreOS), you can choose a different
 base image by using the `--from` option in `podman build`.
+
 [subs=+quotes]
 -------------------------------
 $ *podman build --from=registry.fedoraproject.org/fedora-minimal:36 -f ./images/Containerfile-sysstat -t collector-sysstat:latest*
 -------------------------------
+========
 
 You will have noticed there is no `Containerfile` for exporter. That is because
 `quarkus-maven-plugin` can do just fine
@@ -424,7 +434,7 @@ TBD
 // imagestream.image.openshift.io/mandrel imported
 // ...
 
-===== Publishing Image =====
+===== Publishing the Image =====
 
 Make sure the internal OpenShift image registry is exposed if you want to copy the image somewhere else.
 
@@ -459,4 +469,8 @@ $ *skopeo copy \*
     *docker://default-route-openshift-image-registry.apps.your.openshift.cluster/project/linux-metrics-exporter:latest \*
     *docker://quay.io/youruser/yourimage:latest*
 -------------------------------
+
+== Acknowledgements ==
+
+Thanks to https://github.com/divinitus/[Piotr Baranowski] for the idea about running `sa1` in a DaemonSet.
 
