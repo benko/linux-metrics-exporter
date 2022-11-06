@@ -19,7 +19,7 @@ endif::[]
 
 A composite pod that can be run in a `DaemonSet` and exposes standard Linux system activity data collector (`sadc`) and process accounting (`psacct`) data as scrapable Prometheus metrics.
 
-toc::[]
+toc::[Table of Contents]
 
 == Components ==
 
