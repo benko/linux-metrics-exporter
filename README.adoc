@@ -1,7 +1,6 @@
 = Linux Metrics Exporter for OpenShift Nodes =
+Grega Bremec <gregab-at-p0f-dot-net>
 
-:author: Grega Bremec
-:email: gregab-at-p0f-dot-net
 :revnumber: 1.0
 :revdate: 6th November 2022
 
@@ -13,8 +12,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+:status:
 :toc: macro
 :toclevels: 4
+:!toc-title:
 :toc-placement!:
 
 A composite pod that can be run in a `DaemonSet` and exposes standard Linux system activity data collector (`sadc`) and process accounting (`psacct`) data as scrapable Prometheus metrics.
