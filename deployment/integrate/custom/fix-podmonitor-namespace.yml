@@ -7,8 +7,5 @@ target:
   version: v1
   kind: PodMonitor
   name: exporter-monitor
-patch: |-
-  - op: replace
-    path: /metadata/namespace
-    # Set this to wherever your prometheus is.
-    value: your-prometheus-namespace
+# Set the project in this file ("value:") to wherever your Prometheus is.
+path: fix-podmonitor-namespace.json
