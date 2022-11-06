@@ -13,7 +13,7 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-:toc:
+:toc: macro
 :toclevels: 4
 :toc-placement!:
 
