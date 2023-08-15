@@ -12,7 +12,7 @@ spec:
   selector:
     matchLabels:
       app: metrics
-  endpoints:
+  podMetricsEndpoints:
     - interval: 15s
       path: /q/metrics
       targetPort: 28080
