@@ -9,6 +9,6 @@ spec:
   channel: v4
   installPlanApproval: Automatic
   name: grafana-operator
-  source: redhat-operators-3scale-community
+  source: community-operators
   sourceNamespace: openshift-marketplace
   startingCSV: grafana-operator.v4.2.0

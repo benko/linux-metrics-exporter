@@ -9,6 +9,6 @@ spec:
   channel: beta
   installPlanApproval: Automatic
   name: prometheus
-  source: redhat-operators-3scale-community
+  source: community-operators
   sourceNamespace: openshift-marketplace
   startingCSV: prometheusoperator.0.47.0
